@@ -1,9 +1,5 @@
 import { Sidebar } from "flowbite-react";
-//import { useEffect, useState } from "react";
-//import BackendSDK from "../../../backend-sdk/src/index.ts";
-//const apiUrl = import.meta.env.VITE_HTTP_GATEWAY;
-
-//const naas = new BackendSDK("secretkey1", apiUrl!);
+import { useNavigate, useLocation } from "react-router-dom";
 
 const MOCK_USERS = [
   {
@@ -23,25 +19,28 @@ const MOCK_USERS = [
   },
 ];
 
-function UsersSidebar() {
-  // const [users, setUsers] = useState([]);
+function UsersSidebar({ logs }) {
+  const location = useLocation();
+  const navigate = useNavigate();
 
-  // useEffect(() => {
-  //   const fetchUsers = async () => {
-  //     const userData = await naas.getUsers(); // need to add to backend sdk
-  //     setUsers(userData);
-  //   };
+  const handleClick = (event: React.MouseEvent) => {
+    const userId = event.currentTarget.getAttribute("data-key");
+    navigate(`/user/${userId}`);
+  };
 
-  //   fetchUsers();
-  // }, []);
-
+  //className="w-4/5"
+  console.log("USER SIDEBAR: ", logs);
   return (
-    <Sidebar className="w-1/2" aria-label="Default sidebar example">
+    <Sidebar className="flex-grow" aria-label="Default sidebar example">
       <Sidebar.Items>
         <Sidebar.ItemGroup>
-          {MOCK_USERS.map((user) => {
+          {logs.map((user) => {
             return (
-              <Sidebar.Item key={user.user_id} href="#">
+              <Sidebar.Item
+                key={user.id}
+                data-key={user.id}
+                onClick={handleClick}
+              >
                 {user.name} {user.email}
               </Sidebar.Item>
             );

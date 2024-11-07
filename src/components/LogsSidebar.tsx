@@ -1,5 +1,4 @@
 import { Sidebar } from "flowbite-react";
-import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import BackendSDK from "../../../backend-sdk/src/index.ts";
 const apiUrl = import.meta.env.VITE_HTTP_GATEWAY;
@@ -36,37 +35,26 @@ const naas = new BackendSDK("secretkey1", apiUrl!);
 //   },
 // ];
 
-function LogsSidebar() {
-  /*
-    thinking specific logs selected should be added as query params
-    in url?
-    Also can pull that specific log's details from state? Or do I have a state lifting issue?
-  */
+function LogsSidebar({ logs }) {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const [logs, setLogs] = useState([]);
-
-  useEffect(() => {
-    const fetchLogs = async () => {
-      const logs = await naas.getNotificationLogs();
-      setLogs(logs);
-    };
-
-    fetchLogs();
-  }, []);
+  const handleClick = (event: React.MouseEvent) => {
+    const logId = event.currentTarget.getAttribute("data-key");
+    navigate(`/notification-logs/${logId}`);
+  };
 
   return (
-    <Sidebar className="w-1/2" aria-label="Default sidebar example">
+    <Sidebar className="flex-grow" aria-label="Default sidebar example">
       <Sidebar.Items>
         <Sidebar.ItemGroup>
           {logs.map((log) => {
-            console.log({ log });
             return (
               <Sidebar.Item
                 key={log.log_id}
-                href="#"
-                onClick={() => navigate(`/notification-logs/${log.log_id}`)}
+                onClick={handleClick}
+                data-key={log.log_id}
+                active={location.search.includes(log.log_id)}
               >
                 {log.message}
               </Sidebar.Item>

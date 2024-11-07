@@ -11,10 +11,18 @@ const MOCK_LOG = {
   status: "notification request received",
 };
 
-function LogTable() {
+/*
+when a particular log is selected, this table will display
+with the log's details.
+
+How can I pass the specific log details from the LogSidebar
+to this component?
+*/
+
+function LogTable({ log }) {
   return (
     <div className="overflow-x-auto">
-      <Table hoverable>
+      <Table>
         <Table.Head>
           <Table.HeadCell>Status</Table.HeadCell>
           <Table.HeadCell>Recipient</Table.HeadCell>
@@ -25,12 +33,12 @@ function LogTable() {
         <Table.Body className="divide-y">
           <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
             <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
-              {MOCK_LOG.status}
+              {log.status}
             </Table.Cell>
-            <Table.Cell>{MOCK_LOG.recipient}</Table.Cell>
-            <Table.Cell>{MOCK_LOG.channel}</Table.Cell>
-            <Table.Cell>{MOCK_LOG.message}</Table.Cell>
-            <Table.Cell>{MOCK_LOG.created_at}</Table.Cell>
+            <Table.Cell>User {log.user_id}</Table.Cell>
+            <Table.Cell>{log.channel}</Table.Cell>
+            <Table.Cell>{log.message}</Table.Cell>
+            <Table.Cell>{log.created_at}</Table.Cell>
           </Table.Row>
         </Table.Body>
       </Table>

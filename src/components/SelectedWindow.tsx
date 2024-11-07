@@ -1,18 +1,20 @@
 import { useLocation } from "react-router-dom";
-import LogsSidebar from "./LogsSidebar.tsx";
-import UsersSidebar from "./UsersSidebar.tsx";
+import Placeholder from "./SidebarPlaceholder.tsx";
+import UsersTable from "./UsersTable.tsx";
+import LogsTable from "./LogsTable.tsx";
+import ExampleChart from "./Chart.tsx";
 
-function SelectedWindow() {
+function SelectedWindow({ notifLogs, userLogs }) {
   const location = useLocation();
-  /*
-    if path matches show corresponding sidebar, otherwise
-    display a placeholder sidebar
-  */
+
   return (
     <>
-      {location.pathname === "/notification-logs" && <LogsSidebar />}
-      {location.pathname === "/my-users" && <UsersSidebar />}
-      {/* {location.pathname === "/" && <HomeComponent />} */}
+      {location.pathname.includes("/notification-logs") && (
+        <LogsTable logs={notifLogs} />
+      )}
+      {location.pathname === "/users" && <UsersTable logs={userLogs} />}
+      {location.pathname === "/analytics" && <ExampleChart />}
+      {location.pathname === "/sign-in" && <Placeholder />}
     </>
   );
 }

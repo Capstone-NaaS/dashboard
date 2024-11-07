@@ -7,9 +7,9 @@ function Header() {
     <Navbar fluid rounded>
       <Navbar.Brand href="https://flowbite-react.com">
         <img
-          src="/favicon.svg"
-          className="mr-3 h-6 sm:h-9"
-          alt="Telegraph React Logo"
+          src="./public/favicon.ico"
+          className="mr-3 h-20 sm:h-16"
+          alt="Telegraph Logo"
         />
         <span className="self-center whitespace-nowrap text-xl font-semibold dark:text-white">
           Telegraph

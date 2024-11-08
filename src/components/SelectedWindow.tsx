@@ -3,6 +3,7 @@ import Placeholder from "./SidebarPlaceholder.tsx";
 import UsersTable from "./UsersTable.tsx";
 import LogsTable from "./LogsTable.tsx";
 import ExampleChart from "./Chart.tsx";
+import SignIn from "./SignIn.tsx";
 
 function SelectedWindow({ notifLogs, userLogs }) {
   const location = useLocation();
@@ -14,7 +15,7 @@ function SelectedWindow({ notifLogs, userLogs }) {
       )}
       {location.pathname === "/users" && <UsersTable logs={userLogs} />}
       {location.pathname === "/analytics" && <ExampleChart />}
-      {location.pathname === "/sign-in" && <Placeholder />}
+      {location.pathname === "/sign-in" && <SignIn />}
     </>
   );
 }

@@ -1,4 +1,4 @@
-import { Table, Badge } from "flowbite-react";
+import { Table, Badge, Button } from "flowbite-react";
 
 const MOCK_LOG = {
   id: 11,
@@ -40,7 +40,7 @@ function LogsTable({ logs }) {
 
   return (
     <div className="overflow-x-auto flex-grow">
-      <Table>
+      <Table hoverable>
         <Table.Head>
           <Table.HeadCell>Status</Table.HeadCell>
           <Table.HeadCell>Recipient</Table.HeadCell>
@@ -62,6 +62,11 @@ function LogsTable({ logs }) {
                 <Table.Cell>{log.channel}</Table.Cell>
                 <Table.Cell>{log.message}</Table.Cell>
                 <Table.Cell>{log.created_at}</Table.Cell>
+                <Table.Cell>
+                  <a href="#" className="font-medium hover:underline">
+                    Log Details
+                  </a>
+                </Table.Cell>
               </Table.Row>
             );
           })}

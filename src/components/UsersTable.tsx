@@ -1,8 +1,28 @@
 "use client";
-
+import { useState, useEffect } from "react";
 import { Table } from "flowbite-react";
+import BackendSDK from "../../../backend-sdk/src/index.ts";
 
-function UsersTable({ logs }) {
+const apiUrl = import.meta.env.VITE_HTTP_GATEWAY;
+const naas = new BackendSDK("secretkey1", apiUrl!);
+
+function UsersTable() {
+  const [users, setUsers] = useState([]);
+
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        console.log("fetching users...");
+        const fetchedUsers = await naas.getAllUsers();
+        setUsers(fetchedUsers.message);
+      } catch (error) {
+        console.error("Error fetching users: ", error);
+      }
+    };
+
+    fetchUsers();
+  }, []);
+
   return (
     <div className="overflow-x-auto flex-grow">
       <Table>
@@ -14,7 +34,7 @@ function UsersTable({ logs }) {
           <Table.HeadCell>Last Notified</Table.HeadCell>
         </Table.Head>
         <Table.Body className="divide-y">
-          {logs.map((user) => {
+          {users.map((user) => {
             return (
               <Table.Row
                 key={user.id}

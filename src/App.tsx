@@ -10,20 +10,9 @@ const apiUrl = import.meta.env.VITE_HTTP_GATEWAY;
 const naas = new BackendSDK("secretkey1", apiUrl!);
 
 function App() {
-  const [logs, setLogs] = useState([]);
   const [users, setUsers] = useState([]);
 
   useEffect(() => {
-    const fetchLogs = async () => {
-      try {
-        console.log("fetching logs...");
-        const fetchedLogs = await naas.getNotificationLogs();
-        setLogs(fetchedLogs);
-      } catch (error) {
-        console.error("Error fetching logs: ", error);
-      }
-    };
-
     const fetchUsers = async () => {
       try {
         console.log("fetching users...");
@@ -34,7 +23,6 @@ function App() {
       }
     };
 
-    fetchLogs();
     fetchUsers();
   }, []);
 
@@ -43,8 +31,8 @@ function App() {
       <Header />
       <main className="flex h-[calc(100vh-6rem)] items-start justify-center gap-2">
         <CategorySidebar />
-        <SelectedWindow notifLogs={logs} userLogs={users} />
-        <InfoWindow notifLogs={logs} />
+        <SelectedWindow userLogs={users} />
+        <InfoWindow />
       </main>
     </Router>
   );

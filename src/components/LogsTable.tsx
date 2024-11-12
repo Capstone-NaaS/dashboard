@@ -1,6 +1,27 @@
+import { useEffect, useState } from "react";
 import { Table, Badge } from "flowbite-react";
+import BackendSDK from "../../../backend-sdk/src/index.ts";
 
-function LogsTable({ logs }) {
+const apiUrl = import.meta.env.VITE_HTTP_GATEWAY;
+const naas = new BackendSDK("secretkey1", apiUrl!);
+
+function LogsTable() {
+  const [logs, setLogs] = useState([]);
+
+  useEffect(() => {
+    const fetchLogs = async () => {
+      try {
+        console.log("fetching logs...");
+        const fetchedLogs = await naas.getNotificationLogs();
+        setLogs(fetchedLogs);
+      } catch (error) {
+        console.error("Error fetching logs: ", error);
+      }
+    };
+
+    fetchLogs();
+  }, []);
+
   function sortAndFilterLogs(logs) {
     logs = JSON.parse(JSON.stringify(logs)); // deep copy
 
@@ -72,6 +93,7 @@ function LogsTable({ logs }) {
       </div>
     );
   }
+
   const tableData = sortAndFilterLogs(logs);
 
   return (

@@ -4,14 +4,12 @@ import LogsTable from "./LogsTable.tsx";
 import ExampleChart from "./Chart.tsx";
 import SignIn from "./SignIn.tsx";
 
-function SelectedWindow({ notifLogs, userLogs }) {
+function SelectedWindow({ userLogs }) {
   const location = useLocation();
 
   return (
     <>
-      {location.pathname.includes("/notification-logs") && (
-        <LogsTable logs={notifLogs} />
-      )}
+      {location.pathname.includes("/notification-logs") && <LogsTable />}
       {location.pathname === "/users" && <UsersTable logs={userLogs} />}
       {location.pathname === "/analytics" && <ExampleChart />}
       {location.pathname === "/sign-in" && <SignIn />}

@@ -1,7 +1,7 @@
 import { useLocation, matchPath } from "react-router-dom";
 import LogTable from "./LogTable.tsx";
 
-function InfoWindow({ notifLogs }) {
+function InfoWindow() {
   const location = useLocation();
   const [path, id] = [...location.pathname.split("/").filter(Boolean)];
 
@@ -11,10 +11,10 @@ function InfoWindow({ notifLogs }) {
 
   return (
     <>
-      {matchPath("/notification-logs/:id", location.pathname)?.pattern.path ===
+      {/* {matchPath("/notification-logs/:id", location.pathname)?.pattern.path ===
         "/notification-logs/:id" && (
         <LogTable log={notifLogs.filter((log) => log.log_id === id).pop()} />
-      )}
+      )} */}
       {/* {location.pathname === "/user" && <UsersSidebar />} */}
       {/* {location.pathname === "/" && <HomeComponent />} */}
     </>

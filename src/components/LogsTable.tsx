@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Table, Badge } from "flowbite-react";
+import { Table, Badge, Drawer } from "flowbite-react";
 import BackendSDK from "../../../backend-sdk/src/index.ts";
 
 const apiUrl = import.meta.env.VITE_HTTP_GATEWAY;
@@ -7,6 +7,18 @@ const naas = new BackendSDK("secretkey1", apiUrl!);
 
 function LogsTable() {
   const [logs, setLogs] = useState([]);
+  const [selectedLog, setSelectedLog] = useState({});
+  const [isOpen, setIsOpen] = useState(false);
+
+  const handleOpen = (log) => {
+    setSelectedLog(log);
+    setIsOpen(true);
+  };
+
+  const handleClose = () => {
+    setSelectedLog({});
+    setIsOpen(false);
+  };
 
   useEffect(() => {
     const fetchLogs = async () => {
@@ -120,16 +132,60 @@ function LogsTable() {
                 <Table.Cell>{log.channel}</Table.Cell>
                 <Table.Cell>{log.message}</Table.Cell>
                 <Table.Cell>{formatDate(log.created_at)}</Table.Cell>
-                <Table.Cell>
-                  <a href="#" className="font-medium hover:underline">
-                    Log Details
-                  </a>
+                <Table.Cell onClick={() => handleOpen(log)}>
+                  <p className="font-medium hover:underline">Log Details</p>
                 </Table.Cell>
               </Table.Row>
             );
           })}
         </Table.Body>
       </Table>
+      <Drawer
+        className="w-3/4"
+        open={isOpen}
+        onClose={() => handleClose()}
+        position="right"
+      >
+        <Drawer.Header
+          title={`Associated Notification Logs: ${selectedLog.log_id}`}
+          titleIcon={() => <></>}
+        />
+        <Drawer.Items>
+          <Table hoverable>
+            <Table.Head>
+              <Table.HeadCell>Status</Table.HeadCell>
+              <Table.HeadCell>Recipient</Table.HeadCell>
+              <Table.HeadCell>Channel</Table.HeadCell>
+              <Table.HeadCell>Message</Table.HeadCell>
+              <Table.HeadCell>Date</Table.HeadCell>
+            </Table.Head>
+            <Table.Body className="divide-y">
+              {logs
+                .filter(
+                  (log) =>
+                    log.notification_id === selectedLog.notification_id &&
+                    log.log_id !== selectedLog.log_id
+                )
+                .map((log) => {
+                  return (
+                    <Table.Row
+                      key={log.log_id}
+                      className="bg-white dark:border-gray-700 dark:bg-gray-800"
+                    >
+                      <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                        {getBadge(log)}
+                      </Table.Cell>
+                      <Table.Cell>User {log.user_id}</Table.Cell>
+                      <Table.Cell>{log.channel}</Table.Cell>
+                      <Table.Cell>{log.message}</Table.Cell>
+                      <Table.Cell>{formatDate(log.created_at)}</Table.Cell>
+                    </Table.Row>
+                  );
+                })}
+            </Table.Body>
+          </Table>
+        </Drawer.Items>
+      </Drawer>
     </div>
   );
 }

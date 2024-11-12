@@ -1,35 +1,53 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { BrowserRouter as Router } from "react-router-dom";
+import { useEffect, useState } from "react";
+import Header from "./components/Header";
+import CategorySidebar from "./components/CategorySidebar";
+import SelectedWindow from "./components/SelectedWindow";
+import InfoWindow from "./components/InfoWindow";
+import BackendSDK from "./../../backend-sdk/src/index.ts";
+
+const apiUrl = import.meta.env.VITE_HTTP_GATEWAY;
+const naas = new BackendSDK("secretkey1", apiUrl!);
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [logs, setLogs] = useState([]);
+  const [users, setUsers] = useState([]);
+
+  useEffect(() => {
+    const fetchLogs = async () => {
+      try {
+        console.log("fetching logs...");
+        const fetchedLogs = await naas.getNotificationLogs();
+        setLogs(fetchedLogs);
+      } catch (error) {
+        console.error("Error fetching logs: ", error);
+      }
+    };
+
+    const fetchUsers = async () => {
+      try {
+        console.log("fetching users...");
+        const fetchedUsers = await naas.getAllUsers();
+        setUsers(fetchedUsers.message);
+      } catch (error) {
+        console.error("Error fetching users: ", error);
+      }
+    };
+
+    fetchLogs();
+    fetchUsers();
+  }, []);
 
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <Router>
+      <Header />
+      <main className="flex h-[calc(100vh-6rem)] items-start justify-center gap-2">
+        <CategorySidebar />
+        <SelectedWindow notifLogs={logs} userLogs={users} />
+        <InfoWindow notifLogs={logs} />
+      </main>
+    </Router>
+  );
 }
 
-export default App
+export default App;

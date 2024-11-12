@@ -11,13 +11,19 @@
     "test": "vitest"
   },
   "dependencies": {
+    "dotenv": "^16.4.5",
+    "flowbite": "^2.5.2",
+    "flowbite-react": "^0.10.2",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^6.27.0",
+    "recharts": "^2.13.3"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^6.4.6",
     "@testing-library/react": "^16.0.0",
     "@testing-library/user-event": "^14.5.2",
+    "@types/node": "^22.8.7",
     "@types/react": "^18.2.66",
     "@types/react-dom": "^18.2.22",
     "@typescript-eslint/eslint-plugin": "^7.2.0",

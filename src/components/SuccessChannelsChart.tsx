@@ -45,8 +45,9 @@ const SuccessChannelsChart = ({ logs, chartLabels, parseDates, datesObj }) => {
 
   const successInAppCount = () => {
     const successfulLogs = getAllSuccess();
+    console.log("successfulLogs", successfulLogs);
     let successfulCounts = { ...datesObj };
-    let inappLogs = successfulLogs.filter((log) => log.channel === "in-app");
+    let inappLogs = successfulLogs.filter((log) => log.channel === "in_app");
     return parseDates(inappLogs, successfulCounts);
   };
   const inappData = successInAppCount();
@@ -56,7 +57,7 @@ const SuccessChannelsChart = ({ logs, chartLabels, parseDates, datesObj }) => {
     labels: chartLabels.length > 0 ? chartLabels : ["No Data"],
     datasets: [
       {
-        label: "in-app",
+        label: "in_app",
         data: inappData,
         borderColor: "#3F51B5",
       },

@@ -56,7 +56,7 @@ const FailChannelsChart = ({ logs, chartLabels, parseDates, datesObj }) => {
     labels: chartLabels.length > 0 ? chartLabels : ["No Data"],
     datasets: [
       {
-        label: "in-app",
+        label: "in_app",
         data: inappData,
         borderColor: "#3F51B5",
       },

@@ -1,26 +1,7 @@
 import { useEffect, useState } from "react";
 import { Table, Badge, Drawer } from "flowbite-react";
 import formatDate from "../utils/formatDate";
-
-interface Log {
-  user_id: string;
-  created_at: string;
-  status: string;
-  notification_id: string;
-  log_id: string;
-  ttl: number;
-  message: string;
-}
-
-interface InAppNotificationLog extends Log {
-  channel: "in_app";
-}
-
-interface EmailNotificationLog extends Log {
-  subject: string;
-  receiver_email: string;
-  channel: "email";
-}
+import { InAppNotificationLog, EmailNotificationLog } from "../types";
 
 function LogsTable() {
   const [logs, setLogs] = useState<

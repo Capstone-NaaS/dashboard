@@ -2,15 +2,7 @@
 import { useState, useEffect } from "react";
 import { Table } from "flowbite-react";
 import formatDate from "../utils/formatDate";
-
-interface User {
-  id: string;
-  name: string;
-  email: string;
-  created_at: string;
-  last_seen: string;
-  last_notified: string;
-}
+import { User } from "../types/index";
 
 function UsersTable() {
   const [users, setUsers] = useState<User[]>([]);

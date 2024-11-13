@@ -13,21 +13,19 @@ function DlqTable({ logs }) {
           <Table.HeadCell>Receiver Email</Table.HeadCell>
         </Table.Head>
         <Table.Body className="divide-y">
-          {logs.map((log) => {
-            return (
-              <Table.Row
-                key={log.notification_id}
-                className="bg-white dark:border-gray-700 dark:bg-gray-800"
-              >
-                <Table.Cell>{log.notification_id}</Table.Cell>
-                <Table.Cell>{log.user_id}</Table.Cell>
-                <Table.Cell>{log.body.message}</Table.Cell>
-                <Table.Cell>{log.channel}</Table.Cell>
-                <Table.Cell>{log.body.subject}</Table.Cell>
-                <Table.Cell>{log.body.receiver_email}</Table.Cell>
-              </Table.Row>
-            );
-          })}
+          {logs.map((log) => (
+            <Table.Row
+              key={log.notification_id}
+              className="bg-white dark:border-gray-700 dark:bg-gray-800"
+            >
+              <Table.Cell>{log.notification_id}</Table.Cell>
+              <Table.Cell>{log.user_id}</Table.Cell>
+              <Table.Cell>{log.body.message}</Table.Cell>
+              <Table.Cell>{log.channel}</Table.Cell>
+              <Table.Cell>{log.body.subject}</Table.Cell>
+              <Table.Cell>{log.body.receiver_email}</Table.Cell>
+            </Table.Row>
+          ))}
         </Table.Body>
       </Table>
     </div>

@@ -6,8 +6,9 @@ import SelectedWindow from "./components/SelectedWindow";
 import InfoWindow from "./components/InfoWindow";
 import BackendSDK from "./../../backend-sdk/src/index.ts";
 
-const apiUrl = import.meta.env.VITE_HTTP_GATEWAY;
-const naas = new BackendSDK("secretkey1", apiUrl!);
+const apiUrl: string = import.meta.env.VITE_HTTP_GATEWAY;
+const API_KEY: string = import.meta.env.VITE_API_KEY;
+const naas = new BackendSDK(API_KEY, apiUrl);
 
 function App() {
   const [logs, setLogs] = useState([]);
@@ -38,13 +39,14 @@ function App() {
     const fetchDlq = async () => {
       try {
         console.log("fetching dlq...");
-        let response = await fetch(
-          "https://azj3xly8t0.execute-api.us-west-1.amazonaws.com/dev-kwang/dlq",
-          {
-            method: "GET",
-          }
-        );
+        let response = await fetch(`${apiUrl}/dlq`, {
+          method: "GET",
+          headers: {
+            Authorization: API_KEY,
+          },
+        });
         const fetchedDlq = await response.json();
+        console.log(fetchedDlq);
         setDlq(fetchedDlq.map((log) => JSON.parse(log)));
       } catch (error) {
         console.error("error fetching dlq: ", error);

@@ -98,12 +98,16 @@ function LogsTable() {
   function getBadge(log: InAppNotificationLog | EmailNotificationLog) {
     let badgeColor;
 
-    if (log.status.includes("received")) {
+    if (log.status === "Notification request received.") {
       badgeColor = "success";
-    } else if (log.status.includes("pref")) {
+    } else if (
+      log.status === "Notification not sent - channel disabled by user."
+    ) {
+      badgeColor = "warning";
+    } else if (log.status === "Notification queued for sending.") {
       badgeColor = "info";
-    } else if (log.status.includes("failed")) {
-      badgeColor = "failure";
+    } else {
+      badgeColor = "Dark"; // Dark badges indicate a conditional statement needed for the status
     }
 
     return (

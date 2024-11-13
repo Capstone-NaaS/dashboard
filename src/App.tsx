@@ -12,6 +12,7 @@ const naas = new BackendSDK("secretkey1", apiUrl!);
 function App() {
   const [logs, setLogs] = useState([]);
   const [users, setUsers] = useState([]);
+  const [dlq, setDlq] = useState([]);
 
   useEffect(() => {
     const fetchLogs = async () => {
@@ -34,16 +35,33 @@ function App() {
       }
     };
 
+    const fetchDlq = async () => {
+      try {
+        console.log("fetching dlq...");
+        let response = await fetch(
+          "https://azj3xly8t0.execute-api.us-west-1.amazonaws.com/dev-kwang/dlq",
+          {
+            method: "GET",
+          }
+        );
+        const fetchedDlq = await response.json();
+        setDlq(fetchedDlq.map((log) => JSON.parse(log)));
+      } catch (error) {
+        console.error("error fetching dlq: ", error);
+      }
+    };
+
     fetchLogs();
     fetchUsers();
+    fetchDlq();
   }, []);
 
   return (
     <Router>
       <Header />
       <main className="flex h-[calc(100vh-6rem)] items-start justify-center gap-2">
-        <CategorySidebar />
-        <SelectedWindow notifLogs={logs} userLogs={users} />
+        <CategorySidebar hasDlq={dlq.length > 0} />
+        <SelectedWindow notifLogs={logs} userLogs={users} dlqLogs={dlq} />
         <InfoWindow notifLogs={logs} />
       </main>
     </Router>

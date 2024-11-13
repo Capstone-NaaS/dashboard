@@ -1,26 +1,46 @@
 "use client";
 import { useState, useEffect } from "react";
 import { Table } from "flowbite-react";
-import BackendSDK from "../../../backend-sdk/src/index.ts";
 
-const apiUrl = import.meta.env.VITE_HTTP_GATEWAY;
-const naas = new BackendSDK("secretkey1", apiUrl!);
+interface User {
+  id: string;
+  name: string;
+  email: string;
+  created_at: string;
+  last_seen: string;
+  last_notified: string;
+}
 
 function UsersTable() {
-  const [users, setUsers] = useState([]);
+  const [users, setUsers] = useState<User[]>([]);
 
   useEffect(() => {
-    const fetchUsers = async () => {
+    const getAllUsers = async () => {
       try {
-        console.log("fetching users...");
-        const fetchedUsers = await naas.getAllUsers();
-        setUsers(fetchedUsers.message);
+        const apiUrl = import.meta.env.VITE_HTTP_GATEWAY;
+        const apiSecret = import.meta.env.VITE_API_KEY;
+
+        const url = apiUrl + `/users`;
+
+        let response = await fetch(url, {
+          method: "GET",
+          headers: {
+            Authorization: apiSecret,
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error(`HTTP error: ${response.status}`);
+        }
+
+        const fetchedUsers = await response.json();
+        setUsers(fetchedUsers);
       } catch (error) {
-        console.error("Error fetching users: ", error);
+        console.log("Error fetching users", error);
       }
     };
 
-    fetchUsers();
+    getAllUsers();
   }, []);
 
   return (

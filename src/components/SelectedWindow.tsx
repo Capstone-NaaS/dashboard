@@ -1,7 +1,7 @@
 import { useLocation } from "react-router-dom";
 import UsersTable from "./UsersTable.tsx";
 import LogsTable from "./LogsTable.tsx";
-import ExampleChart from "./Chart.tsx";
+import AnalyticsChart from "./Chart.tsx";
 import SignIn from "./SignIn.tsx";
 
 function SelectedWindow({ notifLogs, userLogs }) {
@@ -13,7 +13,7 @@ function SelectedWindow({ notifLogs, userLogs }) {
         <LogsTable logs={notifLogs} />
       )}
       {location.pathname === "/users" && <UsersTable logs={userLogs} />}
-      {location.pathname === "/analytics" && <ExampleChart />}
+      {location.pathname === "/analytics" && <AnalyticsChart />}
       {location.pathname === "/sign-in" && <SignIn />}
     </>
   );

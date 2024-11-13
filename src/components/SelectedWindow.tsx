@@ -1,10 +1,11 @@
 import { useLocation } from "react-router-dom";
 import UsersTable from "./UsersTable.tsx";
 import LogsTable from "./LogsTable.tsx";
-import AnalyticsChart from "./Chart.tsx";
+import DlqTable from "./DlqTable.tsx";
+import ExampleChart from "./Chart.tsx";
 import SignIn from "./SignIn.tsx";
 
-function SelectedWindow({ notifLogs, userLogs }) {
+function SelectedWindow({ notifLogs, userLogs, dlqLogs }) {
   const location = useLocation();
 
   return (
@@ -13,7 +14,8 @@ function SelectedWindow({ notifLogs, userLogs }) {
         <LogsTable logs={notifLogs} />
       )}
       {location.pathname === "/users" && <UsersTable logs={userLogs} />}
-      {location.pathname === "/analytics" && <AnalyticsChart />}
+      {location.pathname === "/analytics" && <ExampleChart />}
+      {location.pathname === "/dlq" && <DlqTable logs={dlqLogs} />}
       {location.pathname === "/sign-in" && <SignIn />}
     </>
   );

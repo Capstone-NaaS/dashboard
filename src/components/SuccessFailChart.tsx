@@ -1,3 +1,5 @@
+import { getAllSuccessfulLogs } from "../utils/getAllSuccessfulLogs";
+import { getAllFailedLogs } from "../utils/getAllFailedLogs";
 import { Line } from "react-chartjs-2";
 import {
   Chart as ChartJS,
@@ -21,43 +23,17 @@ ChartJS.register(
 );
 
 const SuccessFailChart = ({ logs, chartLabels, parseDates, datesObj }) => {
-  // return an array of all the "successful" logs
-  const getAllSuccess = () => {
-    const successDates = logs.filter((log) => {
-      if (
-        log.status === "Email sent." ||
-        log.status === "Notification queued for sending."
-      ) {
-        return log;
-      }
-    });
-    return successDates;
-  };
-
   // return an array of the counts of successful logs per each date
   const successCount = () => {
-    let successfulLogs = getAllSuccess();
+    let successfulLogs = getAllSuccessfulLogs(logs);
     let successfulCounts = { ...datesObj };
     return parseDates(successfulLogs, successfulCounts);
   };
   const successData = successCount();
 
-  // return an array of all the "failed" logs
-  const getAllFailed = () => {
-    const failedDates = logs.filter((log) => {
-      if (
-        log.status === "Email could not be sent." ||
-        log.status === "Notification unable to be broadcast."
-      ) {
-        return log;
-      }
-    });
-    return failedDates;
-  };
-
   // return an array of the counts of all failed logs per each date
   const failedCount = () => {
-    let failedLogs = getAllFailed();
+    let failedLogs = getAllFailedLogs(logs);
     let failedCounts = { ...datesObj };
     return parseDates(failedLogs, failedCounts);
   };

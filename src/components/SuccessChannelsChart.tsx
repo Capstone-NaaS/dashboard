@@ -9,6 +9,7 @@ import {
   Tooltip,
   Legend,
 } from "chart.js";
+import { getAllSuccessfulLogs } from "../utils/getAllSuccessfulLogs";
 
 ChartJS.register(
   CategoryScale,
@@ -21,22 +22,10 @@ ChartJS.register(
 );
 
 const SuccessChannelsChart = ({ logs, chartLabels, parseDates, datesObj }) => {
-  // return an array of all the "successful" logs
-  const getAllSuccess = () => {
-    const successDates = logs.filter((log) => {
-      if (
-        log.status === "Email sent." ||
-        log.status === "Notification queued for sending."
-      ) {
-        return log;
-      }
-    });
-    return successDates;
-  };
+  const successfulLogs = getAllSuccessfulLogs(logs);
 
   // filter successful logs based on channels and dates
   const successEmailCount = () => {
-    const successfulLogs = getAllSuccess();
     let successfulCounts = { ...datesObj };
     let emailLogs = successfulLogs.filter((log) => log.channel === "email");
     return parseDates(emailLogs, successfulCounts);
@@ -44,8 +33,6 @@ const SuccessChannelsChart = ({ logs, chartLabels, parseDates, datesObj }) => {
   const emailData = successEmailCount();
 
   const successInAppCount = () => {
-    const successfulLogs = getAllSuccess();
-    console.log("successfulLogs", successfulLogs);
     let successfulCounts = { ...datesObj };
     let inappLogs = successfulLogs.filter((log) => log.channel === "in_app");
     return parseDates(inappLogs, successfulCounts);

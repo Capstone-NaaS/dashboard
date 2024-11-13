@@ -9,6 +9,7 @@ import {
   Tooltip,
   Legend,
 } from "chart.js";
+import { getAllFailedLogs } from "../utils/getAllFailedLogs";
 
 ChartJS.register(
   CategoryScale,
@@ -21,22 +22,10 @@ ChartJS.register(
 );
 
 const FailChannelsChart = ({ logs, chartLabels, parseDates, datesObj }) => {
-  // return an array of all the "failed" logs
-  const getAllFailed = () => {
-    const failedDates = logs.filter((log) => {
-      if (
-        log.status === "Email could not be sent." ||
-        log.status === "Notification unable to be broadcast."
-      ) {
-        return log;
-      }
-    });
-    return failedDates;
-  };
+  const failedLogs = getAllFailedLogs(logs);
 
   // filter failed logs based on channels and dates
   const failEmailCount = () => {
-    const failedLogs = getAllFailed();
     let failedCounts = { ...datesObj };
     let emailLogs = failedLogs.filter((log) => log.channel === "email");
     return parseDates(emailLogs, failedCounts);
@@ -44,7 +33,6 @@ const FailChannelsChart = ({ logs, chartLabels, parseDates, datesObj }) => {
   const emailData = failEmailCount();
 
   const failInAppCount = () => {
-    const failedLogs = getAllFailed();
     let failedCounts = { ...datesObj };
     let inappLogs = failedLogs.filter((log) => log.channel === "in_app");
     return parseDates(inappLogs, failedCounts);

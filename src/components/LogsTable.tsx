@@ -62,7 +62,7 @@ function LogsTable() {
         const fetchedLogs = await response.json();
         setLogs(fetchedLogs);
       } catch (error) {
-        return { status: 500, body: "Internal Server Error" };
+        console.log("Error fetching notification logs", error);
       }
     };
 

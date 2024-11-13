@@ -1,41 +1,78 @@
 import { useEffect, useState } from "react";
 import { Table, Badge, Drawer } from "flowbite-react";
-import BackendSDK from "../../../backend-sdk/src/index.ts";
 
-const apiUrl = import.meta.env.VITE_HTTP_GATEWAY;
-const naas = new BackendSDK("secretkey1", apiUrl!);
+interface Log {
+  user_id: string;
+  created_at: string;
+  status: string;
+  notification_id: string;
+  log_id: string;
+  ttl: number;
+  message: string;
+}
+
+interface InAppNotificationLog extends Log {
+  channel: "in_app";
+}
+
+interface EmailNotificationLog extends Log {
+  subject: string;
+  receiver_email: string;
+  channel: "email";
+}
 
 function LogsTable() {
-  const [logs, setLogs] = useState([]);
-  const [selectedLog, setSelectedLog] = useState({});
-  const [isOpen, setIsOpen] = useState(false);
+  const [logs, setLogs] = useState<
+    (InAppNotificationLog | EmailNotificationLog)[]
+  >([]);
+  const [selectedLog, setSelectedLog] = useState<
+    InAppNotificationLog | EmailNotificationLog | undefined
+  >();
+  const [isOpen, setIsOpen] = useState<boolean>(false);
 
-  const handleOpen = (log) => {
+  const handleOpen = (log: InAppNotificationLog | EmailNotificationLog) => {
     setSelectedLog(log);
     setIsOpen(true);
   };
 
   const handleClose = () => {
-    setSelectedLog({});
+    setSelectedLog(undefined); // what to do here for removing selected log
     setIsOpen(false);
   };
 
   useEffect(() => {
-    const fetchLogs = async () => {
+    const getNotificationLogs = async () => {
       try {
-        console.log("fetching logs...");
-        const fetchedLogs = await naas.getNotificationLogs();
+        const apiUrl = import.meta.env.VITE_HTTP_GATEWAY;
+        const apiSecret = import.meta.env.VITE_API_KEY;
+
+        const url = apiUrl + `/notifications`;
+
+        let response = await fetch(url, {
+          method: "GET",
+          headers: {
+            Authorization: apiSecret,
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error(`HTTP error: ${response.status}`);
+        }
+
+        const fetchedLogs = await response.json();
         setLogs(fetchedLogs);
       } catch (error) {
-        console.error("Error fetching logs: ", error);
+        return { status: 500, body: "Internal Server Error" };
       }
     };
 
-    fetchLogs();
+    getNotificationLogs();
   }, []);
 
-  function sortAndFilterLogs(logs) {
-    logs = JSON.parse(JSON.stringify(logs)); // deep copy
+  function sortAndFilterLogs(
+    logs: (InAppNotificationLog | EmailNotificationLog)[]
+  ) {
+    logs = JSON.parse(JSON.stringify(logs));
 
     // sort the logs to group by created_at most recent to least recent log
     logs.sort((logA, logB) => {
@@ -76,7 +113,7 @@ function LogsTable() {
     return mostRecent;
   }
 
-  function formatDate(isoString) {
+  function formatDate(isoString: string) {
     const date = new Date(isoString);
 
     const formattedDate = date.toLocaleDateString("en-US", {
@@ -88,7 +125,7 @@ function LogsTable() {
     return formattedDate;
   }
 
-  function getBadge(log) {
+  function getBadge(log: InAppNotificationLog | EmailNotificationLog) {
     let badgeColor;
 
     if (log.status.includes("received")) {
@@ -140,52 +177,54 @@ function LogsTable() {
           })}
         </Table.Body>
       </Table>
-      <Drawer
-        className="w-3/4"
-        open={isOpen}
-        onClose={() => handleClose()}
-        position="right"
-      >
-        <Drawer.Header
-          title={`Associated Notification Logs: ${selectedLog.log_id}`}
-          titleIcon={() => <></>}
-        />
-        <Drawer.Items>
-          <Table hoverable>
-            <Table.Head>
-              <Table.HeadCell>Status</Table.HeadCell>
-              <Table.HeadCell>Recipient</Table.HeadCell>
-              <Table.HeadCell>Channel</Table.HeadCell>
-              <Table.HeadCell>Message</Table.HeadCell>
-              <Table.HeadCell>Date</Table.HeadCell>
-            </Table.Head>
-            <Table.Body className="divide-y">
-              {logs
-                .filter(
-                  (log) =>
-                    log.notification_id === selectedLog.notification_id &&
-                    log.log_id !== selectedLog.log_id
-                )
-                .map((log) => {
-                  return (
-                    <Table.Row
-                      key={log.log_id}
-                      className="bg-white dark:border-gray-700 dark:bg-gray-800"
-                    >
-                      <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
-                        {getBadge(log)}
-                      </Table.Cell>
-                      <Table.Cell>User {log.user_id}</Table.Cell>
-                      <Table.Cell>{log.channel}</Table.Cell>
-                      <Table.Cell>{log.message}</Table.Cell>
-                      <Table.Cell>{formatDate(log.created_at)}</Table.Cell>
-                    </Table.Row>
-                  );
-                })}
-            </Table.Body>
-          </Table>
-        </Drawer.Items>
-      </Drawer>
+      {selectedLog ? (
+        <Drawer
+          className="w-3/4"
+          open={isOpen}
+          onClose={() => handleClose()}
+          position="right"
+        >
+          <Drawer.Header
+            title={`Associated Notification Logs: ${selectedLog.log_id}`}
+            titleIcon={() => <></>}
+          />
+          <Drawer.Items>
+            <Table hoverable>
+              <Table.Head>
+                <Table.HeadCell>Status</Table.HeadCell>
+                <Table.HeadCell>Recipient</Table.HeadCell>
+                <Table.HeadCell>Channel</Table.HeadCell>
+                <Table.HeadCell>Message</Table.HeadCell>
+                <Table.HeadCell>Date</Table.HeadCell>
+              </Table.Head>
+              <Table.Body className="divide-y">
+                {logs
+                  .filter(
+                    (log) =>
+                      log.notification_id === selectedLog.notification_id &&
+                      log.log_id !== selectedLog.log_id
+                  )
+                  .map((log) => {
+                    return (
+                      <Table.Row
+                        key={log.log_id}
+                        className="bg-white dark:border-gray-700 dark:bg-gray-800"
+                      >
+                        <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                          {getBadge(log)}
+                        </Table.Cell>
+                        <Table.Cell>User {log.user_id}</Table.Cell>
+                        <Table.Cell>{log.channel}</Table.Cell>
+                        <Table.Cell>{log.message}</Table.Cell>
+                        <Table.Cell>{formatDate(log.created_at)}</Table.Cell>
+                      </Table.Row>
+                    );
+                  })}
+              </Table.Body>
+            </Table>
+          </Drawer.Items>
+        </Drawer>
+      ) : null}
     </div>
   );
 }

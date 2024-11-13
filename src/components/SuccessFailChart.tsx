@@ -25,8 +25,8 @@ const SuccessFailChart = ({ logs, chartLabels, parseDates, datesObj }) => {
   const getAllSuccess = () => {
     const successDates = logs.filter((log) => {
       if (
-        log.status === "Email sent" ||
-        log.status === "Notification queued for sending"
+        log.status === "Email sent." ||
+        log.status === "Notification queued for sending."
       ) {
         return log;
       }
@@ -45,7 +45,10 @@ const SuccessFailChart = ({ logs, chartLabels, parseDates, datesObj }) => {
   // return an array of all the "failed" logs
   const getAllFailed = () => {
     const failedDates = logs.filter((log) => {
-      if (log.status === "Notification not sent - channel disabled by user") {
+      if (
+        log.status === "Email could not be sent." ||
+        log.status === "Notification unable to be broadcast."
+      ) {
         return log;
       }
     });

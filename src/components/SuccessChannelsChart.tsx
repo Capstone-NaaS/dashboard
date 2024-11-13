@@ -1,9 +1,10 @@
-import { Bar } from "react-chartjs-2";
+import { Line } from "react-chartjs-2";
 import {
   Chart as ChartJS,
   CategoryScale,
   LinearScale,
-  BarElement,
+  PointElement,
+  LineElement,
   Title,
   Tooltip,
   Legend,
@@ -12,7 +13,8 @@ import {
 ChartJS.register(
   CategoryScale,
   LinearScale,
-  BarElement,
+  PointElement,
+  LineElement,
   Title,
   Tooltip,
   Legend
@@ -23,8 +25,8 @@ const SuccessChannelsChart = ({ logs, chartLabels, parseDates, datesObj }) => {
   const getAllSuccess = () => {
     const successDates = logs.filter((log) => {
       if (
-        log.status === "Email sent" ||
-        log.status === "Notification queued for sending"
+        log.status === "Email sent." ||
+        log.status === "Notification queued for sending."
       ) {
         return log;
       }
@@ -56,12 +58,12 @@ const SuccessChannelsChart = ({ logs, chartLabels, parseDates, datesObj }) => {
       {
         label: "in-app",
         data: inappData,
-        backgroundColor: "#81D4FA",
+        borderColor: "#3F51B5",
       },
       {
         label: "email",
         data: emailData,
-        backgroundColor: "#0288D1",
+        borderColor: "#FEBE10",
       },
     ],
   };
@@ -101,7 +103,7 @@ const SuccessChannelsChart = ({ logs, chartLabels, parseDates, datesObj }) => {
         margin: "20px", // Optional: Adds space around the border, outside of the div
       }}
     >
-      <Bar data={data} options={options} />
+      <Line data={data} options={options} />
     </div>
   );
 };

@@ -24,7 +24,10 @@ const FailChannelsChart = ({ logs, chartLabels, parseDates, datesObj }) => {
   // return an array of all the "failed" logs
   const getAllFailed = () => {
     const failedDates = logs.filter((log) => {
-      if (log.status === "Notification not sent - channel disabled by user") {
+      if (
+        log.status === "Email could not be sent." ||
+        log.status === "Notification unable to be broadcast."
+      ) {
         return log;
       }
     });
@@ -43,7 +46,7 @@ const FailChannelsChart = ({ logs, chartLabels, parseDates, datesObj }) => {
   const failInAppCount = () => {
     const failedLogs = getAllFailed();
     let failedCounts = { ...datesObj };
-    let inappLogs = failedLogs.filter((log) => log.channel === "in-app");
+    let inappLogs = failedLogs.filter((log) => log.channel === "in_app");
     return parseDates(inappLogs, failedCounts);
   };
   const inappData = failInAppCount();

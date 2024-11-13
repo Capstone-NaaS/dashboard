@@ -3,10 +3,6 @@ import SuccessChannelsChart from "./SuccessChannelsChart";
 import FailChannelsChart from "./FailChannelChart";
 import { useState, useEffect } from "react";
 
-import BackendSDK from "./../../../backend-sdk/src/index.ts";
-const apiUrl = import.meta.env.VITE_HTTP_GATEWAY;
-const naas = new BackendSDK("secretkey1", apiUrl!);
-
 const MONTHS = {
   1: "Jan",
   2: "Feb",
@@ -74,16 +70,32 @@ const AnalyticsChart = () => {
   }, {});
 
   useEffect(() => {
-    const fetchLogs = async () => {
+    const getNotificationLogs = async () => {
       try {
-        console.log("fetching logs...");
-        const fetchedLogs = await naas.getNotificationLogs();
+        const apiUrl = import.meta.env.VITE_HTTP_GATEWAY;
+        const apiSecret = import.meta.env.VITE_API_KEY;
+
+        const url = apiUrl + `/notifications`;
+
+        let response = await fetch(url, {
+          method: "GET",
+          headers: {
+            Authorization: apiSecret,
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error(`HTTP error: ${response.status}`);
+        }
+
+        const fetchedLogs = await response.json();
         setLogs(fetchedLogs);
       } catch (error) {
-        console.error("Error fetching logs: ", error);
+        console.log("Error fetching notification logs", error);
       }
     };
-    fetchLogs();
+
+    getNotificationLogs();
   }, []);
 
   return (

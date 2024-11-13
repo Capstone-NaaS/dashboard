@@ -159,7 +159,7 @@ function LogsTable() {
           position="right"
         >
           <Drawer.Header
-            title={`Associated Notification Logs: ${selectedLog.log_id}`}
+            title={"Associated Notification Logs:"}
             titleIcon={() => <></>}
           />
           <Drawer.Items>

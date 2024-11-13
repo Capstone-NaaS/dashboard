@@ -60,7 +60,7 @@ function CategorySidebar() {
     const categoryValue = event.target.textContent
       .toLowerCase()
       .replace(" ", "-");
-    console.log({ categoryValue });
+
     setActiveCategory(categoryValue);
     navigate(categoryValue);
   };

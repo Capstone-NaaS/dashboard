@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Table, Badge, Drawer } from "flowbite-react";
+import formatDate from "../utils/formatDate";
 
 interface Log {
   user_id: string;
@@ -111,18 +112,6 @@ function LogsTable() {
     }
 
     return mostRecent;
-  }
-
-  function formatDate(isoString: string) {
-    const date = new Date(isoString);
-
-    const formattedDate = date.toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "short",
-      day: "numeric",
-    });
-
-    return formattedDate;
   }
 
   function getBadge(log: InAppNotificationLog | EmailNotificationLog) {

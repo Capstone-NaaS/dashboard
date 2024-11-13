@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import { Table } from "flowbite-react";
+import formatDate from "../utils/formatDate";
 
 interface User {
   id: string;
@@ -63,8 +64,8 @@ function UsersTable() {
                 <Table.Cell>{user.name}</Table.Cell>
                 <Table.Cell>{user.email}</Table.Cell>
                 <Table.Cell>{user.created_at}</Table.Cell>
-                <Table.Cell>{user.last_seen}</Table.Cell>
-                <Table.Cell>{user.last_notified}</Table.Cell>
+                <Table.Cell>{formatDate(user.last_seen)}</Table.Cell>
+                <Table.Cell>{formatDate(user.last_notified)}</Table.Cell>
               </Table.Row>
             );
           })}

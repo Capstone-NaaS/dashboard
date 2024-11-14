@@ -4,7 +4,7 @@ const MOCK_LOG = {
   user_id: 1,
   recipient: "Erin Olson",
   created_at: "Wed, 30 Oct 2024 23:26:20 GMT",
-  channel: "in-app",
+  channel: "in_app",
   log_id: "fcf86d0f-8fcd-49a9-a61d-343ea5761a36",
   message: "User 1 has logged in",
   notification_id: "4b820132-7e16-43db-9347-c0e9dac5bc5f",

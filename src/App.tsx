@@ -46,7 +46,6 @@ function App() {
           },
         });
         const fetchedDlq = await response.json();
-        console.log(fetchedDlq);
         setDlq(fetchedDlq.map((log) => JSON.parse(log)));
       } catch (error) {
         console.error("error fetching dlq: ", error);

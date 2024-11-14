@@ -1,10 +1,11 @@
 import { Sidebar } from "flowbite-react";
 import { HiArrowSmRight, HiTable, HiUser } from "react-icons/hi";
 import { FaChartLine } from "react-icons/fa6";
+import { BiSolidSkull } from "react-icons/bi";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
 
-function CategorySidebar() {
+function CategorySidebar({ hasDlq }) {
   /*
   The notification logs should be the default active category.
   When the active category is set navigate should be called
@@ -29,6 +30,11 @@ function CategorySidebar() {
       name: "Analytics",
       icon: FaChartLine,
       path: "analytics",
+    },
+    {
+      name: "DLQ",
+      icon: BiSolidSkull,
+      path: "dlq",
     },
     {
       name: "Sign In",
@@ -79,8 +85,13 @@ function CategorySidebar() {
                   activeCategory === category.path
                     ? ACTIVE_CLASS
                     : INACTIVE_CLASS
+                } ${
+                  category.path === "dlq" && hasDlq
+                    ? "bg-red-500 text-white border-red-500 hover:bg-red-600 hover:text-white cursor-pointer"
+                    : ""
                 }`}
                 active={activeCategory === category.path} // honestly not sure if this is necessary
+                style={{ cursor: "pointer" }}
               >
                 {category.name}
               </Sidebar.Item>

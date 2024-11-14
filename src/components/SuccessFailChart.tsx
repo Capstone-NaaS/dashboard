@@ -71,6 +71,7 @@ const SuccessFailChart: React.FC<ChartProps> = ({
         ticks: {
           stepSize: 1,
         },
+        min: 0,
       },
     },
     plugins: {

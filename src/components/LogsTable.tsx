@@ -100,7 +100,7 @@ function LogsTable() {
 
     switch (log.status) {
       case "Notification request received.":
-        badgeColor = "success";
+        badgeColor = "pink";
         break;
       case "Notification not sent - channel disabled by user.":
         badgeColor = "warning";
@@ -109,10 +109,13 @@ function LogsTable() {
         badgeColor = "info";
         break;
       case "Notification unable to be broadcast.":
-        badgeColor = "red";
+        badgeColor = "failure";
+        break;
+      case "Email sent.":
+        badgeColor = "success";
         break;
       case "Email could not be sent.":
-        badgeColor = "red";
+        badgeColor = "failure";
         break;
       default:
         badgeColor = "Dark"; // Dark badges indicate a conditional statement needed for the status
@@ -147,7 +150,7 @@ function LogsTable() {
                 <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
                   {getBadge(log)}
                 </Table.Cell>
-                <Table.Cell>User {log.user_id}</Table.Cell>
+                <Table.Cell>{log.user_id}</Table.Cell>
                 <Table.Cell>{log.channel}</Table.Cell>
                 <Table.Cell>{log.message}</Table.Cell>
                 <Table.Cell>{formatDate(log.created_at)}</Table.Cell>
@@ -201,7 +204,7 @@ function LogsTable() {
                         <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
                           {getBadge(log)}
                         </Table.Cell>
-                        <Table.Cell>User {log.user_id}</Table.Cell>
+                        <Table.Cell>{log.user_id}</Table.Cell>
                         <Table.Cell>{log.channel}</Table.Cell>
                         <Table.Cell>{log.message}</Table.Cell>
                         <Table.Cell>{formatDate(log.created_at)}</Table.Cell>

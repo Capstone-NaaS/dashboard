@@ -12,8 +12,8 @@ function DlqTable({ deadLogs, setDeadLogs }: DlqTableProps) {
   const [filteredLogs, setFilteredLogs] = useState<deadLog[] | null>(null);
   const [userIdFilter, setUserIdFilter] = useState("");
   const [emailFilter, setEmailFilter] = useState("");
-  const [showInApp, setShowInApp] = useState(true);
-  const [showEmail, setShowEmail] = useState(true);
+  const [showInApp, setShowInApp] = useState(false);
+  const [showEmail, setShowEmail] = useState(false);
 
   useEffect(() => {
     (async () => {
@@ -32,6 +32,7 @@ function DlqTable({ deadLogs, setDeadLogs }: DlqTableProps) {
         .toLowerCase()
         .includes(emailFilter.toLowerCase());
       const matchesChannel =
+        (!showInApp && !showEmail) ||
         (showInApp && log.channel === "in_app") ||
         (showEmail && log.channel === "email");
 
@@ -44,10 +45,10 @@ function DlqTable({ deadLogs, setDeadLogs }: DlqTableProps) {
     <div className="overflow-x-auto w-full">
       <div className="flex flex-wrap gap-4 p-4 border-b">
         <div className="flex flex-col">
-          <Label htmlFor="userIdFilter">Filter by User ID</Label>
+          <Label htmlFor="userIdFilter">Filter by Recipient ID</Label>
           <TextInput
             id="userIdFilter"
-            placeholder="Enter user ID"
+            placeholder="Enter recipient ID"
             value={userIdFilter}
             onChange={(e) => setUserIdFilter(e.target.value)}
           />
@@ -85,10 +86,10 @@ function DlqTable({ deadLogs, setDeadLogs }: DlqTableProps) {
       ) : (
         <Table hoverable>
           <Table.Head>
-            <Table.HeadCell>ID</Table.HeadCell>
-            <Table.HeadCell>Recipient</Table.HeadCell>
-            <Table.HeadCell>Message</Table.HeadCell>
+            <Table.HeadCell>Log ID</Table.HeadCell>
+            <Table.HeadCell>Recipient ID</Table.HeadCell>
             <Table.HeadCell>Channel</Table.HeadCell>
+            <Table.HeadCell>Message</Table.HeadCell>
             <Table.HeadCell>Subject</Table.HeadCell>
             <Table.HeadCell>Receiver Email</Table.HeadCell>
           </Table.Head>
@@ -101,8 +102,8 @@ function DlqTable({ deadLogs, setDeadLogs }: DlqTableProps) {
                 >
                   <Table.Cell>{log.notification_id}</Table.Cell>
                   <Table.Cell>{log.user_id}</Table.Cell>
-                  <Table.Cell>{log.body.message}</Table.Cell>
                   <Table.Cell>{log.channel}</Table.Cell>
+                  <Table.Cell>{log.body.message}</Table.Cell>
                   <Table.Cell>{log.body.subject}</Table.Cell>
                   <Table.Cell>{log.body.receiver_email}</Table.Cell>
                 </Table.Row>

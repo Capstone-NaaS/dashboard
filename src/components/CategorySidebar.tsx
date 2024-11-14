@@ -47,18 +47,18 @@ function CategorySidebar({ hasDlq }: CategorySidebarProps) {
   // on mount set notification logs as the active category and set
   // notification-logs as entrypoint
   useEffect(() => {
-    if (location.pathname === "/") {
+    const currentPath = location.pathname.split("/").pop() || "";
+    const matchingCategory = CATEGORIES.find((cat) =>
+      currentPath.includes(cat.path)
+    );
+
+    if (matchingCategory) {
+      setActiveCategory(matchingCategory.path);
+    } else if (location.pathname === "/") {
       setActiveCategory("notification-logs");
       navigate("notification-logs");
-    } else {
-      // otherwise set the active category based on the passed path
-      const { path } = {
-        ...CATEGORIES.find((cat) => location.pathname.includes(cat.path)),
-      };
-
-      setActiveCategory(path || "");
     }
-  }, []);
+  }, [location.pathname, location.search]);
 
   const handleClick = (event: React.MouseEvent) => {
     const target = event.target as HTMLElement;
@@ -72,7 +72,7 @@ function CategorySidebar({ hasDlq }: CategorySidebarProps) {
   };
 
   return (
-    <Sidebar className="w-1/5" aria-label="Default sidebar example">
+    <Sidebar aria-label="Default sidebar example">
       <Sidebar.Items>
         <Sidebar.ItemGroup>
           {CATEGORIES.map((category) => {

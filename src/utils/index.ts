@@ -1,7 +1,7 @@
 import { deadLog } from "../types";
 
 export const fetchDlq = async (
-  setDeadLogs: React.Dispatch<React.SetStateAction<deadLog[] | null>>
+  setDeadLogs: React.Dispatch<React.SetStateAction<deadLog[]>>
 ): Promise<void> => {
   const apiUrl: string = import.meta.env.VITE_HTTP_GATEWAY;
   const API_KEY: string = import.meta.env.VITE_API_KEY;

@@ -1,15 +1,25 @@
 import { Table, TextInput, Checkbox, Label, Spinner } from "flowbite-react";
 import { deadLog } from "../types";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { fetchDlq } from "../utils";
 
 interface DlqTableProps {
-  deadLogs: deadLog[] | null;
-  setDeadLogs: React.Dispatch<React.SetStateAction<deadLog[] | null>>;
+  deadLogs: deadLog[];
+  setDeadLogs: React.Dispatch<React.SetStateAction<deadLog[]>>;
+  loadingDLQ: boolean;
+  setLoadingDLQ: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-function DlqTable({ deadLogs, setDeadLogs }: DlqTableProps) {
-  const [filteredLogs, setFilteredLogs] = useState<deadLog[] | null>(null);
+function DlqTable({
+  deadLogs,
+  setDeadLogs,
+  loadingDLQ,
+  setLoadingDLQ,
+}: DlqTableProps) {
+  const navigate = useNavigate();
+
+  const [filteredLogs, setFilteredLogs] = useState<deadLog[]>([]);
   const [userIdFilter, setUserIdFilter] = useState("");
   const [emailFilter, setEmailFilter] = useState("");
   const [showInApp, setShowInApp] = useState(false);
@@ -18,11 +28,12 @@ function DlqTable({ deadLogs, setDeadLogs }: DlqTableProps) {
   useEffect(() => {
     (async () => {
       await fetchDlq(setDeadLogs);
+      setLoadingDLQ(false);
     })();
   }, []);
 
   useEffect(() => {
-    if (!deadLogs) return;
+    if (loadingDLQ) return;
 
     const newFilteredLogs = deadLogs.filter((log) => {
       const matchesUserId = log.user_id
@@ -78,7 +89,7 @@ function DlqTable({ deadLogs, setDeadLogs }: DlqTableProps) {
           <Label htmlFor="emailFilterCheckbox">Email</Label>
         </div>
       </div>
-      {filteredLogs === null ? (
+      {loadingDLQ ? (
         <div className="flex justify-center items-center p-8">
           <Spinner aria-label="Loading" size="xl" className="text-gray-500" />
           <span className="ml-3 text-gray-500">Loading logs...</span>
@@ -101,7 +112,14 @@ function DlqTable({ deadLogs, setDeadLogs }: DlqTableProps) {
                   className="bg-white dark:border-gray-700 dark:bg-gray-800"
                 >
                   <Table.Cell>{log.notification_id}</Table.Cell>
-                  <Table.Cell>{log.user_id}</Table.Cell>
+                  <Table.Cell>
+                    <span
+                      className="hover:text-blue-600 hover:underline cursor-pointer"
+                      onClick={() => navigate(`/users?id=${log.user_id}`)}
+                    >
+                      {log.user_id}
+                    </span>
+                  </Table.Cell>
                   <Table.Cell>{log.channel}</Table.Cell>
                   <Table.Cell>{log.body.message}</Table.Cell>
                   <Table.Cell>{log.body.subject}</Table.Cell>

@@ -55,7 +55,7 @@ function UsersTable() {
               >
                 <Table.Cell>{user.name}</Table.Cell>
                 <Table.Cell>{user.email}</Table.Cell>
-                <Table.Cell>{user.created_at}</Table.Cell>
+                <Table.Cell>{formatDate(user.created_at)}</Table.Cell>
                 <Table.Cell>{formatDate(user.last_seen)}</Table.Cell>
                 <Table.Cell>{formatDate(user.last_notified)}</Table.Cell>
               </Table.Row>

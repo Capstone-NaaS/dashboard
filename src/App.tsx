@@ -3,6 +3,7 @@ import Header from "./components/Header";
 import CategorySidebar from "./components/CategorySidebar";
 import SelectedWindow from "./components/SelectedWindow";
 import { useEffect, useState } from "react";
+
 const apiUrl: string = import.meta.env.VITE_HTTP_GATEWAY;
 const API_KEY: string = import.meta.env.VITE_API_KEY;
 

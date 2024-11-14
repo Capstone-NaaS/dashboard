@@ -98,21 +98,34 @@ function LogsTable() {
   function getBadge(log: InAppNotificationLog | EmailNotificationLog) {
     let badgeColor;
 
-    if (log.status === "Notification request received.") {
+    if (
+      log.status === "Email sent." ||
+      log.status === "Notification queued for sending." ||
+      log.status === "delete" ||
+      log.status === "read"
+    ) {
       badgeColor = "success";
     } else if (
       log.status === "Notification not sent - channel disabled by user."
     ) {
       badgeColor = "warning";
-    } else if (log.status === "Notification queued for sending.") {
-      badgeColor = "info";
+    } else if (
+      log.status === "Notification unable to be broadcast." ||
+      log.status === "Email could not be sent."
+    ) {
+      badgeColor = "failure";
     } else {
       badgeColor = "Dark"; // Dark badges indicate a conditional statement needed for the status
     }
 
     return (
       <div className="flex flex-wrap gap-2">
-        <Badge color={badgeColor}>{log.status}</Badge>
+        <Badge
+          className="font-normal text-sm text-gray-900 dark:text-white"
+          color={badgeColor}
+        >
+          {log.status}
+        </Badge>
       </div>
     );
   }
@@ -121,20 +134,21 @@ function LogsTable() {
 
   return (
     <div className="overflow-x-auto flex-grow">
-      <Table hoverable>
+      <Table hoverable className="rounded-lg overflow-hidden">
         <Table.Head>
-          <Table.HeadCell>Status</Table.HeadCell>
-          <Table.HeadCell>Recipient</Table.HeadCell>
-          <Table.HeadCell>Channel</Table.HeadCell>
-          <Table.HeadCell>Message</Table.HeadCell>
-          <Table.HeadCell>Date</Table.HeadCell>
+          <Table.HeadCell className="bg-gray-100">Status</Table.HeadCell>
+          <Table.HeadCell className="bg-gray-100">Recipient</Table.HeadCell>
+          <Table.HeadCell className="bg-gray-100">Channel</Table.HeadCell>
+          <Table.HeadCell className="bg-gray-100">Message</Table.HeadCell>
+          <Table.HeadCell className="bg-gray-100">Date</Table.HeadCell>
         </Table.Head>
         <Table.Body className="divide-y">
           {tableData.map((log) => {
             return (
               <Table.Row
                 key={log.log_id}
-                className="bg-white dark:border-gray-700 dark:bg-gray-800"
+                className="bg-white dark:border-gray-700 dark:bg-gray-800 hover:bg-gray-100 cursor-pointer"
+                onClick={() => handleOpen(log)}
               >
                 <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
                   {getBadge(log)}
@@ -143,9 +157,11 @@ function LogsTable() {
                 <Table.Cell>{log.channel}</Table.Cell>
                 <Table.Cell>{log.message}</Table.Cell>
                 <Table.Cell>{formatDate(log.created_at)}</Table.Cell>
-                <Table.Cell onClick={() => handleOpen(log)}>
-                  <p className="font-medium hover:underline">Log Details</p>
-                </Table.Cell>
+                {/* <Table.Cell */}
+                {/* // onClick={() => handleOpen(log)} */}
+                {/* // > */}
+                {/* //   <p className="font-medium hover:underline">Log Details</p> */}
+                {/* // </Table.Cell> */}
               </Table.Row>
             );
           })}

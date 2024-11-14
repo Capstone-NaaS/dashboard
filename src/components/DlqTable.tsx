@@ -3,7 +3,7 @@ import { Table } from "flowbite-react";
 function DlqTable({ logs }) {
   return (
     <div className="overflow-x-auto flex-grow">
-      <Table hoverable>
+      <Table hoverable className="rounded-lg overflow-hidden">
         <Table.Head>
           <Table.HeadCell>ID</Table.HeadCell>
           <Table.HeadCell>Recipient</Table.HeadCell>

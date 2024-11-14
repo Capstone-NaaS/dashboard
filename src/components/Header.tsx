@@ -5,18 +5,18 @@ import { Navbar } from "flowbite-react";
 function Header() {
   return (
     <Navbar fluid rounded>
-      <Navbar.Brand href="https://flowbite-react.com">
+      <Navbar.Brand>
         <img
-          src="./public/favicon.ico"
-          className="mr-3 h-20 sm:h-16"
+          src="./public/transparent_logo.png"
+          className="mr-3 h-20 sm:h-25"
           alt="Telegraph Logo"
         />
-        <span className="self-center whitespace-nowrap text-xl font-semibold dark:text-white">
+        <span className="self-center whitespace-nowrap text-3xl text-[#F5F5F5] mt-1 transform translate-x-[-4px]">
           Telegraph
         </span>
       </Navbar.Brand>
       <Navbar.Toggle />
-      <Navbar.Collapse>
+      <Navbar.Collapse className="transform translate-x-[-18px]">
         <Navbar.Link href="#" active>
           Home
         </Navbar.Link>

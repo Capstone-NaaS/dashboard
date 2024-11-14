@@ -39,21 +39,20 @@ const AnalyticsChart = () => {
       const month = MONTHS[(date.getMonth() + 1).toString()];
       const day = date.getDate();
 
-      return `${month}-${day}`;
+      return { month, day, fullDate: `${month}-${day}` };
     });
-    const sortedDates = created_at.sort((a, b) => {
-      const [monthA, dayA] = a.split("-");
-      const [monthB, dayB] = b.split("-");
+    const sortedDates = created_at
+      .sort((a, b) => {
+        const monthIndexA = Object.values(MONTHS).indexOf(a.month);
+        const monthIndexB = Object.values(MONTHS).indexOf(b.month);
 
-      if (parseInt(dayA) !== parseInt(dayB)) {
-        return parseInt(dayA) - parseInt(dayB);
-      }
+        if (monthIndexA !== monthIndexB) {
+          return monthIndexA - monthIndexB;
+        }
 
-      return (
-        Object.values(MONTHS).indexOf(monthA) -
-        Object.values(MONTHS).indexOf(monthB)
-      );
-    });
+        return a.day - b.day;
+      })
+      .map((log) => log.fullDate);
 
     const uniqueDates: Array<string> = [];
     sortedDates.forEach((date) => {

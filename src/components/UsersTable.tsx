@@ -38,7 +38,7 @@ function UsersTable() {
 
   return (
     <div className="overflow-x-auto flex-grow">
-      <Table>
+      <Table className="rounded-lg overflow-hidden">
         <Table.Head>
           <Table.HeadCell>Name</Table.HeadCell>
           <Table.HeadCell>Email</Table.HeadCell>

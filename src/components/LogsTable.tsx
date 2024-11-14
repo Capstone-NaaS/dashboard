@@ -2,8 +2,11 @@ import { useEffect, useState } from "react";
 import { Table, Badge, Drawer, Spinner } from "flowbite-react";
 import formatDate from "../utils/formatDate";
 import { InAppNotificationLog, EmailNotificationLog } from "../types";
+import { useNavigate } from "react-router-dom";
 
 function LogsTable() {
+  const navigate = useNavigate();
+
   const [logs, setLogs] = useState<
     (InAppNotificationLog | EmailNotificationLog)[]
   >([]);
@@ -162,18 +165,25 @@ function LogsTable() {
                   <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
                     {getBadge(log)}
                   </Table.Cell>
-                  <Table.Cell>{log.user_id}</Table.Cell>
+                  <Table.Cell>
+                    <span
+                      className="hover:text-blue-600 hover:underline cursor-pointer"
+                      onClick={() => navigate(`/users?id=${log.user_id}`)}
+                    >
+                      {log.user_id}
+                    </span>
+                  </Table.Cell>
                   <Table.Cell>{log.channel}</Table.Cell>
                   <Table.Cell>{log.message}</Table.Cell>
                   <Table.Cell>{formatDate(log.created_at)}</Table.Cell>
                   <Table.Cell>
-                    <p
+                    <span
                       onClick={() => handleOpen(log)}
                       className="font-medium hover:underline"
                       style={{ cursor: "pointer" }}
                     >
                       Log Details
-                    </p>
+                    </span>
                   </Table.Cell>
                 </Table.Row>
               );

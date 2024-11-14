@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Table, Badge, Drawer } from "flowbite-react";
+import { Table, Badge, Drawer, Spinner } from "flowbite-react";
 import formatDate from "../utils/formatDate";
 import { InAppNotificationLog, EmailNotificationLog } from "../types";
 
@@ -11,6 +11,7 @@ function LogsTable() {
     InAppNotificationLog | EmailNotificationLog | undefined
   >();
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [loading, setLoading] = useState(true);
 
   const handleOpen = (log: InAppNotificationLog | EmailNotificationLog) => {
     setSelectedLog(log);
@@ -45,6 +46,8 @@ function LogsTable() {
         setLogs(fetchedLogs);
       } catch (error) {
         console.log("Error fetching notification logs", error);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -132,42 +135,51 @@ function LogsTable() {
 
   return (
     <div className="overflow-x-auto flex-grow">
-      <Table hoverable>
-        <Table.Head>
-          <Table.HeadCell>Status</Table.HeadCell>
-          <Table.HeadCell>Recipient</Table.HeadCell>
-          <Table.HeadCell>Channel</Table.HeadCell>
-          <Table.HeadCell>Message</Table.HeadCell>
-          <Table.HeadCell>Date</Table.HeadCell>
-        </Table.Head>
-        <Table.Body className="divide-y">
-          {tableData.map((log) => {
-            return (
-              <Table.Row
-                key={log.log_id}
-                className="bg-white dark:border-gray-700 dark:bg-gray-800"
-              >
-                <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
-                  {getBadge(log)}
-                </Table.Cell>
-                <Table.Cell>{log.user_id}</Table.Cell>
-                <Table.Cell>{log.channel}</Table.Cell>
-                <Table.Cell>{log.message}</Table.Cell>
-                <Table.Cell>{formatDate(log.created_at)}</Table.Cell>
-                <Table.Cell>
-                  <p
-                    onClick={() => handleOpen(log)}
-                    className="font-medium hover:underline"
-                    style={{ cursor: "pointer" }}
-                  >
-                    Log Details
-                  </p>
-                </Table.Cell>
-              </Table.Row>
-            );
-          })}
-        </Table.Body>
-      </Table>
+      {loading ? (
+        <div className="flex justify-center items-center p-8">
+          <Spinner aria-label="Loading" size="xl" className="text-gray-500" />
+          <span className="ml-3 text-gray-500">
+            Loading notification logs...
+          </span>
+        </div>
+      ) : (
+        <Table hoverable>
+          <Table.Head>
+            <Table.HeadCell>Status</Table.HeadCell>
+            <Table.HeadCell>Recipient</Table.HeadCell>
+            <Table.HeadCell>Channel</Table.HeadCell>
+            <Table.HeadCell>Message</Table.HeadCell>
+            <Table.HeadCell>Date</Table.HeadCell>
+          </Table.Head>
+          <Table.Body className="divide-y">
+            {tableData.map((log) => {
+              return (
+                <Table.Row
+                  key={log.log_id}
+                  className="bg-white dark:border-gray-700 dark:bg-gray-800"
+                >
+                  <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                    {getBadge(log)}
+                  </Table.Cell>
+                  <Table.Cell>{log.user_id}</Table.Cell>
+                  <Table.Cell>{log.channel}</Table.Cell>
+                  <Table.Cell>{log.message}</Table.Cell>
+                  <Table.Cell>{formatDate(log.created_at)}</Table.Cell>
+                  <Table.Cell>
+                    <p
+                      onClick={() => handleOpen(log)}
+                      className="font-medium hover:underline"
+                      style={{ cursor: "pointer" }}
+                    >
+                      Log Details
+                    </p>
+                  </Table.Cell>
+                </Table.Row>
+              );
+            })}
+          </Table.Body>
+        </Table>
+      )}
       {selectedLog ? (
         <Drawer
           className="w-3/4"

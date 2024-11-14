@@ -6,11 +6,18 @@ import AnalyticsChart from "./Chart.tsx";
 import { deadLog } from "../types/index.ts";
 
 interface SelectedWindowProps {
-  deadLogs: deadLog[] | null;
-  setDeadLogs: React.Dispatch<React.SetStateAction<deadLog[] | null>>;
+  deadLogs: deadLog[];
+  setDeadLogs: React.Dispatch<React.SetStateAction<deadLog[]>>;
+  loadingDLQ: boolean;
+  setLoadingDLQ: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-function SelectedWindow({ deadLogs, setDeadLogs }: SelectedWindowProps) {
+function SelectedWindow({
+  deadLogs,
+  setDeadLogs,
+  loadingDLQ,
+  setLoadingDLQ,
+}: SelectedWindowProps) {
   const location = useLocation();
 
   return (
@@ -19,7 +26,12 @@ function SelectedWindow({ deadLogs, setDeadLogs }: SelectedWindowProps) {
       {location.pathname === "/users" && <UsersTable />}
       {location.pathname === "/analytics" && <AnalyticsChart />}
       {location.pathname === "/dlq" && (
-        <DlqTable deadLogs={deadLogs} setDeadLogs={setDeadLogs} />
+        <DlqTable
+          deadLogs={deadLogs}
+          setDeadLogs={setDeadLogs}
+          loadingDLQ={loadingDLQ}
+          setLoadingDLQ={setLoadingDLQ}
+        />
       )}
     </>
   );

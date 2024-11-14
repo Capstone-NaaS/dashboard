@@ -2,8 +2,9 @@ import SuccessFailChart from "./SuccessFailChart";
 import SuccessChannelsChart from "./SuccessChannelsChart";
 import FailChannelsChart from "./FailChannelChart";
 import { useState, useEffect } from "react";
+import { Log, Logs, DateValues } from "../types/chart";
 
-const MONTHS = {
+const MONTHS: { [key: string]: string } = {
   1: "Jan",
   2: "Feb",
   3: "Mar",
@@ -18,10 +19,10 @@ const MONTHS = {
   12: "Dec",
 };
 
-function parseDates(arr, dateObj) {
-  arr.map((log) => {
+function parseDates(arr: Logs, dateObj: DateValues) {
+  arr.map((log: Log) => {
     const date = new Date(log.created_at);
-    const month = MONTHS[date.getMonth() + 1];
+    const month = MONTHS[(date.getMonth() + 1).toString()];
     const day = date.getDate();
 
     dateObj[`${month}-${day}`] += 1;
@@ -33,9 +34,9 @@ const AnalyticsChart = () => {
   const [logs, setLogs] = useState([]);
 
   const xAxisDates = () => {
-    const created_at = logs.map((log) => {
+    const created_at = logs.map((log: Log) => {
       const date = new Date(log.created_at);
-      const month = MONTHS[date.getMonth() + 1];
+      const month = MONTHS[(date.getMonth() + 1).toString()];
       const day = date.getDate();
 
       return `${month}-${day}`;
@@ -54,7 +55,7 @@ const AnalyticsChart = () => {
       );
     });
 
-    const uniqueDates = [];
+    const uniqueDates: Array<string> = [];
     sortedDates.forEach((date) => {
       if (!uniqueDates.includes(date)) {
         uniqueDates.push(date);
@@ -64,7 +65,7 @@ const AnalyticsChart = () => {
   };
   const chartLabels = xAxisDates();
 
-  const datesObj = chartLabels.reduce((acc, curr) => {
+  const datesObj = chartLabels.reduce((acc: DateValues, curr) => {
     acc[curr] = 0;
     return acc;
   }, {});

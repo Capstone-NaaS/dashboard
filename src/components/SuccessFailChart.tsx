@@ -1,6 +1,8 @@
 import { getAllSuccessfulLogs } from "../utils/getAllSuccessfulLogs";
 import { getAllFailedLogs } from "../utils/getAllFailedLogs";
+import { ChartProps } from "../types/chart";
 import { Line } from "react-chartjs-2";
+
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -22,7 +24,12 @@ ChartJS.register(
   Legend
 );
 
-const SuccessFailChart = ({ logs, chartLabels, parseDates, datesObj }) => {
+const SuccessFailChart: React.FC<ChartProps> = ({
+  logs,
+  chartLabels,
+  parseDates,
+  datesObj,
+}) => {
   // return an array of the counts of successful logs per each date
   const successCount = () => {
     let successfulLogs = getAllSuccessfulLogs(logs);
@@ -71,10 +78,10 @@ const SuccessFailChart = ({ logs, chartLabels, parseDates, datesObj }) => {
         display: true,
         text: "Notification Status",
         font: {
-          size: 24, // Set the font size of the title (in pixels)
-          family: "'Helvetica Neue', 'Helvetica', 'Arial', sans-serif", // Optionally specify a font family
-          weight: "bold", // Set the font weight (optional)
-          lineHeight: 1.5, // Line height (optional)
+          size: 24,
+          family: "'Helvetica Neue', 'Helvetica', 'Arial', sans-serif",
+          weight: 400,
+          lineHeight: 1.5,
         },
         color: "#333", // Optionally change the title color
       },

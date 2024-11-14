@@ -10,6 +10,7 @@ import {
   Legend,
 } from "chart.js";
 import { getAllSuccessfulLogs } from "../utils/getAllSuccessfulLogs";
+import { Log, ChartProps } from "../types/chart";
 
 ChartJS.register(
   CategoryScale,
@@ -21,20 +22,29 @@ ChartJS.register(
   Legend
 );
 
-const SuccessChannelsChart = ({ logs, chartLabels, parseDates, datesObj }) => {
+const SuccessChannelsChart: React.FC<ChartProps> = ({
+  logs,
+  chartLabels,
+  parseDates,
+  datesObj,
+}) => {
   const successfulLogs = getAllSuccessfulLogs(logs);
 
   // filter successful logs based on channels and dates
   const successEmailCount = () => {
     let successfulCounts = { ...datesObj };
-    let emailLogs = successfulLogs.filter((log) => log.channel === "email");
+    let emailLogs = successfulLogs.filter(
+      (log: Log) => log.channel === "email"
+    );
     return parseDates(emailLogs, successfulCounts);
   };
   const emailData = successEmailCount();
 
   const successInAppCount = () => {
     let successfulCounts = { ...datesObj };
-    let inappLogs = successfulLogs.filter((log) => log.channel === "in_app");
+    let inappLogs = successfulLogs.filter(
+      (log: Log) => log.channel === "in_app"
+    );
     return parseDates(inappLogs, successfulCounts);
   };
   const inappData = successInAppCount();
@@ -71,12 +81,12 @@ const SuccessChannelsChart = ({ logs, chartLabels, parseDates, datesObj }) => {
         display: true,
         text: "Successful Outgoing Channels",
         font: {
-          size: 24, // Set the font size of the title (in pixels)
-          family: "'Helvetica Neue', 'Helvetica', 'Arial', sans-serif", // Optionally specify a font family
-          weight: "bold", // Set the font weight (optional)
-          lineHeight: 1.5, // Line height (optional)
+          size: 24,
+          family: "'Helvetica Neue', 'Helvetica', 'Arial', sans-serif",
+          weight: 400,
+          lineHeight: 1.5,
         },
-        color: "#333", // Optionally change the title color
+        color: "#333",
       },
     },
   };

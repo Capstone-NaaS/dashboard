@@ -1,5 +1,5 @@
 import { Sidebar } from "flowbite-react";
-import { HiArrowSmRight, HiTable, HiUser } from "react-icons/hi";
+import { HiTable, HiUser } from "react-icons/hi";
 import { FaChartLine } from "react-icons/fa6";
 import { BiSolidSkull } from "react-icons/bi";
 import { useNavigate, useLocation } from "react-router-dom";
@@ -36,11 +36,6 @@ function CategorySidebar({ hasDlq }) {
       icon: BiSolidSkull,
       path: "dlq",
     },
-    {
-      name: "Sign In",
-      icon: HiArrowSmRight,
-      path: "sign-in",
-    },
   ];
   const ACTIVE_CLASS = "border-b border-gray-500";
   const INACTIVE_CLASS = "";
@@ -66,7 +61,7 @@ function CategorySidebar({ hasDlq }) {
     const categoryValue = event.target.textContent
       .toLowerCase()
       .replace(" ", "-");
-    console.log({ categoryValue });
+
     setActiveCategory(categoryValue);
     navigate(categoryValue);
   };

@@ -3,20 +3,16 @@ import UsersTable from "./UsersTable.tsx";
 import LogsTable from "./LogsTable.tsx";
 import DlqTable from "./DlqTable.tsx";
 import AnalyticsChart from "./Chart.tsx";
-import SignIn from "./SignIn.tsx";
 
-function SelectedWindow({ notifLogs, userLogs, dlqLogs }) {
+function SelectedWindow({ dlqLogs }) {
   const location = useLocation();
 
   return (
     <>
-      {location.pathname.includes("/notification-logs") && (
-        <LogsTable logs={notifLogs} />
-      )}
-      {location.pathname === "/users" && <UsersTable logs={userLogs} />}
+      {location.pathname.includes("/notification-logs") && <LogsTable />}
+      {location.pathname === "/users" && <UsersTable />}
       {location.pathname === "/analytics" && <AnalyticsChart />}
       {location.pathname === "/dlq" && <DlqTable logs={dlqLogs} />}
-      {location.pathname === "/sign-in" && <SignIn />}
     </>
   );
 }

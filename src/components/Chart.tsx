@@ -2,7 +2,7 @@ import SuccessFailChart from "./SuccessFailChart";
 import SuccessChannelsChart from "./SuccessChannelsChart";
 import FailChannelsChart from "./FailChannelChart";
 import { useState, useEffect } from "react";
-import { Log, Logs, DateValues } from "../types/chart";
+import { Log, DateValues } from "../types";
 
 const MONTHS: { [key: string]: string } = {
   1: "Jan",
@@ -19,7 +19,7 @@ const MONTHS: { [key: string]: string } = {
   12: "Dec",
 };
 
-function parseDates(arr: Logs, dateObj: DateValues) {
+function parseDates(arr: Log[], dateObj: DateValues) {
   arr.map((log: Log) => {
     const date = new Date(log.created_at);
     const month = MONTHS[(date.getMonth() + 1).toString()];

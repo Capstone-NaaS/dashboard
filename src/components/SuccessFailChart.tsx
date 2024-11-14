@@ -1,6 +1,6 @@
 import { getAllSuccessfulLogs } from "../utils/getAllSuccessfulLogs";
 import { getAllFailedLogs } from "../utils/getAllFailedLogs";
-import { ChartProps } from "../types/chart";
+import { ChartProps } from "../types";
 import { Line } from "react-chartjs-2";
 
 import {

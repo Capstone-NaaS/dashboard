@@ -5,7 +5,11 @@ import { BiSolidSkull } from "react-icons/bi";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
 
-function CategorySidebar({ hasDlq }) {
+interface CategorySidebarProps {
+  hasDlq: boolean;
+}
+
+function CategorySidebar({ hasDlq }: CategorySidebarProps) {
   /*
   The notification logs should be the default active category.
   When the active category is set navigate should be called
@@ -43,31 +47,32 @@ function CategorySidebar({ hasDlq }) {
   // on mount set notification logs as the active category and set
   // notification-logs as entrypoint
   useEffect(() => {
-    if (location.pathname === "/") {
+    const currentPath = location.pathname.split("/").pop() || "";
+    const matchingCategory = CATEGORIES.find((cat) =>
+      currentPath.includes(cat.path)
+    );
+
+    if (matchingCategory) {
+      setActiveCategory(matchingCategory.path);
+    } else if (location.pathname === "/") {
       setActiveCategory("notification-logs");
       navigate("notification-logs");
-    } else {
-      // otherwise set the active category based on the passed path
-      const { path } = {
-        ...CATEGORIES.find((cat) => location.pathname.includes(cat.path)),
-      };
-
-      setActiveCategory(path);
     }
-  }, []);
+  }, [location.pathname, location.search]);
 
   const handleClick = (event: React.MouseEvent) => {
+    const target = event.target as HTMLElement;
     // set active category to clicked category
-    const categoryValue = event.target.textContent
-      .toLowerCase()
-      .replace(" ", "-");
+    const categoryValue = target.textContent?.toLowerCase().replace(" ", "-");
 
-    setActiveCategory(categoryValue);
-    navigate(categoryValue);
+    if (categoryValue) {
+      setActiveCategory(categoryValue);
+      navigate(categoryValue);
+    }
   };
 
   return (
-    <Sidebar className="w-1/5" aria-label="Default sidebar example">
+    <Sidebar aria-label="Default sidebar example">
       <Sidebar.Items>
         <Sidebar.ItemGroup>
           {CATEGORIES.map((category) => {

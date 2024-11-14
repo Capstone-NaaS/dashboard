@@ -5,40 +5,33 @@ import Header from "./components/Header";
 import CategorySidebar from "./components/CategorySidebar";
 import SelectedWindow from "./components/SelectedWindow";
 import { useEffect, useState } from "react";
-
-const apiUrl: string = import.meta.env.VITE_HTTP_GATEWAY;
-const API_KEY: string = import.meta.env.VITE_API_KEY;
+import { deadLog } from "./types";
+import { fetchDlq } from "./utils";
 
 function App() {
-  const [dlq, setDlq] = useState([]);
+  const [deadLogs, setDeadLogs] = useState<deadLog[]>([]);
+  const [loadingDLQ, setLoadingDLQ] = useState(true);
 
   useEffect(() => {
-    const fetchDlq = async () => {
-      try {
-        console.log("fetching dlq...");
-        let response = await fetch(`${apiUrl}/dlq`, {
-          method: "GET",
-          headers: {
-            Authorization: API_KEY,
-          },
-        });
-        const fetchedDlq = await response.json();
-        setDlq(fetchedDlq.map((log) => JSON.parse(log)));
-      } catch (error) {
-        console.error("error fetching dlq: ", error);
-      }
-    };
-
-    fetchDlq();
+    (async () => {
+      await fetchDlq(setDeadLogs);
+    })();
   }, []);
 
   return (
     <Router>
       <Flowbite theme={{ theme: flowbiteTheme }}>
         <Header />
-        <main className="flex h-[calc(100vh-6rem)] items-start justify-center transform translate-x-[-15px]">
-          <CategorySidebar hasDlq={dlq.length > 0} />
-          <SelectedWindow dlqLogs={dlq} />
+        <main className="flex h-[calc(100vh-6rem)]">
+          <div className="w-1/5">
+            <CategorySidebar hasDlq={deadLogs.length > 0} />
+          </div>
+          <SelectedWindow
+            deadLogs={deadLogs}
+            setDeadLogs={setDeadLogs}
+            loadingDLQ={loadingDLQ}
+            setLoadingDLQ={setLoadingDLQ}
+          />
         </main>
       </Flowbite>
     </Router>

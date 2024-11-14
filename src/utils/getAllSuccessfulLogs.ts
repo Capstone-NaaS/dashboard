@@ -1,6 +1,6 @@
-import { Logs } from "../types/chart";
+import { Log } from "../types";
 // return an array of all the "successful" logs
-export const getAllSuccessfulLogs = (logs: Logs) => {
+export const getAllSuccessfulLogs = (logs: Log[]) => {
   const successDates = logs.filter(
     (log) =>
       log.status === "Email sent." ||

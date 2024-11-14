@@ -150,6 +150,7 @@ function LogsTable() {
             <Table.HeadCell>Channel</Table.HeadCell>
             <Table.HeadCell>Message</Table.HeadCell>
             <Table.HeadCell>Date</Table.HeadCell>
+            <Table.HeadCell />
           </Table.Head>
           <Table.Body className="divide-y">
             {tableData.map((log) => {

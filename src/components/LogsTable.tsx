@@ -98,16 +98,24 @@ function LogsTable() {
   function getBadge(log: InAppNotificationLog | EmailNotificationLog) {
     let badgeColor;
 
-    if (log.status === "Notification request received.") {
-      badgeColor = "success";
-    } else if (
-      log.status === "Notification not sent - channel disabled by user."
-    ) {
-      badgeColor = "warning";
-    } else if (log.status === "Notification queued for sending.") {
-      badgeColor = "info";
-    } else {
-      badgeColor = "Dark"; // Dark badges indicate a conditional statement needed for the status
+    switch (log.status) {
+      case "Notification request received.":
+        badgeColor = "success";
+        break;
+      case "Notification not sent - channel disabled by user.":
+        badgeColor = "warning";
+        break;
+      case "Notification queued for sending.":
+        badgeColor = "info";
+        break;
+      case "Notification unable to be broadcast.":
+        badgeColor = "red";
+        break;
+      case "Email could not be sent.":
+        badgeColor = "red";
+        break;
+      default:
+        badgeColor = "Dark"; // Dark badges indicate a conditional statement needed for the status
     }
 
     return (
@@ -143,8 +151,14 @@ function LogsTable() {
                 <Table.Cell>{log.channel}</Table.Cell>
                 <Table.Cell>{log.message}</Table.Cell>
                 <Table.Cell>{formatDate(log.created_at)}</Table.Cell>
-                <Table.Cell onClick={() => handleOpen(log)}>
-                  <p className="font-medium hover:underline">Log Details</p>
+                <Table.Cell>
+                  <p
+                    onClick={() => handleOpen(log)}
+                    className="font-medium hover:underline"
+                    style={{ cursor: "pointer" }}
+                  >
+                    Log Details
+                  </p>
                 </Table.Cell>
               </Table.Row>
             );

@@ -5,7 +5,11 @@ import { BiSolidSkull } from "react-icons/bi";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
 
-function CategorySidebar({ hasDlq }) {
+interface CategorySidebarProps {
+  hasDlq: boolean;
+}
+
+function CategorySidebar({ hasDlq }: CategorySidebarProps) {
   /*
   The notification logs should be the default active category.
   When the active category is set navigate should be called
@@ -52,18 +56,19 @@ function CategorySidebar({ hasDlq }) {
         ...CATEGORIES.find((cat) => location.pathname.includes(cat.path)),
       };
 
-      setActiveCategory(path);
+      setActiveCategory(path || "");
     }
   }, []);
 
   const handleClick = (event: React.MouseEvent) => {
+    const target = event.target as HTMLElement;
     // set active category to clicked category
-    const categoryValue = event.target.textContent
-      .toLowerCase()
-      .replace(" ", "-");
+    const categoryValue = target.textContent?.toLowerCase().replace(" ", "-");
 
-    setActiveCategory(categoryValue);
-    navigate(categoryValue);
+    if (categoryValue) {
+      setActiveCategory(categoryValue);
+      navigate(categoryValue);
+    }
   };
 
   return (

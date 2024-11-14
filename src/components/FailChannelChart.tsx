@@ -10,7 +10,7 @@ import {
   Legend,
 } from "chart.js";
 import { getAllFailedLogs } from "../utils/getAllFailedLogs";
-import { Log, ChartProps } from "../types/chart";
+import { Log, ChartProps } from "../types";
 
 ChartJS.register(
   CategoryScale,

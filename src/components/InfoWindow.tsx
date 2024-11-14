@@ -1,5 +1,4 @@
 import { useLocation, matchPath } from "react-router-dom";
-import LogTable from "./LogTable.tsx";
 
 function InfoWindow() {
   const location = useLocation();

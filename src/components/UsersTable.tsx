@@ -40,50 +40,47 @@ function UsersTable() {
 
   return (
     <div className="overflow-x-auto flex-grow">
-      <Table>
-        <Table.Head>
-          <Table.HeadCell>Name</Table.HeadCell>
-          <Table.HeadCell>Email</Table.HeadCell>
-          <Table.HeadCell>Created At</Table.HeadCell>
-          <Table.HeadCell>Last Seen</Table.HeadCell>
-          <Table.HeadCell>Last Notified</Table.HeadCell>
-        </Table.Head>
-        <Table.Body className="divide-y">
-          {loading ? (
-            <Table.Row>
-              <Table.Cell colSpan={5} className="text-center p-8">
-                <div className="flex justify-center items-center">
-                  <Spinner
-                    aria-label="Loading"
-                    size="xl"
-                    className="text-gray-500"
-                  />
-                  <span className="ml-3 text-gray-500">Loading users...</span>
-                </div>
-              </Table.Cell>
-            </Table.Row>
-          ) : users.length > 0 ? (
-            users.map((user) => (
-              <Table.Row
-                key={user.id}
-                className="bg-white dark:border-gray-700 dark:bg-gray-800"
-              >
-                <Table.Cell>{user.name}</Table.Cell>
-                <Table.Cell>{user.email}</Table.Cell>
-                <Table.Cell>{formatDate(user.created_at)}</Table.Cell>
-                <Table.Cell>{formatDate(user.last_seen)}</Table.Cell>
-                <Table.Cell>{formatDate(user.last_notified)}</Table.Cell>
+      {loading ? (
+        <div className="flex justify-center items-center p-8">
+          <Spinner aria-label="Loading" size="xl" className="text-gray-500" />
+          <span className="ml-3 text-gray-500">Loading users...</span>
+        </div>
+      ) : (
+        <Table>
+          <Table.Head>
+            <Table.HeadCell>Name</Table.HeadCell>
+            <Table.HeadCell>Email</Table.HeadCell>
+            <Table.HeadCell>Created At</Table.HeadCell>
+            <Table.HeadCell>Last Seen</Table.HeadCell>
+            <Table.HeadCell>Last Notified</Table.HeadCell>
+          </Table.Head>
+          <Table.Body className="divide-y">
+            {users.length > 0 ? (
+              users.map((user) => (
+                <Table.Row
+                  key={user.id}
+                  className="bg-white dark:border-gray-700 dark:bg-gray-800"
+                >
+                  <Table.Cell>{user.name}</Table.Cell>
+                  <Table.Cell>{user.email}</Table.Cell>
+                  <Table.Cell>{formatDate(user.created_at)}</Table.Cell>
+                  <Table.Cell>{formatDate(user.last_seen)}</Table.Cell>
+                  <Table.Cell>{formatDate(user.last_notified)}</Table.Cell>
+                </Table.Row>
+              ))
+            ) : (
+              <Table.Row>
+                <Table.Cell
+                  colSpan={5}
+                  className="text-center p-4 text-gray-500"
+                >
+                  No users to display.
+                </Table.Cell>
               </Table.Row>
-            ))
-          ) : (
-            <Table.Row>
-              <Table.Cell colSpan={5} className="text-center p-4 text-gray-500">
-                No users to display.
-              </Table.Cell>
-            </Table.Row>
-          )}
-        </Table.Body>
-      </Table>
+            )}
+          </Table.Body>
+        </Table>
+      )}
     </div>
   );
 }

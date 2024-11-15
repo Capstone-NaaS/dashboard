@@ -117,6 +117,12 @@ function LogsTable() {
       case "Notification unable to be broadcast.":
         badgeColor = "failure";
         break;
+      case "Notification read.":
+        badgeColor = "purple";
+        break;
+      case "Notification deleted.":
+        badgeColor = "indigo";
+        break;
       case "Email sent.":
         badgeColor = "success";
         break;

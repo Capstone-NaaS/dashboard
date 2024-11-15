@@ -7,6 +7,7 @@ import {
   Spinner,
   Button,
   Drawer,
+  List,
 } from "flowbite-react";
 import { FaRegBell } from "react-icons/fa";
 import { MdOutlineEmail } from "react-icons/md";
@@ -150,6 +151,57 @@ function LogsTable() {
   }
 
   function getBadge(log: InAppNotificationLog | EmailNotificationLog) {
+    const STATUS_STATES = {
+      success: [
+        "Notification not sent - channel disabled by user.",
+        "Notification queued for sending.",
+        "Notification read.",
+        "Notification deleted.",
+        "Email sent.",
+      ],
+      failure: [
+        "Notification unable to be broadcast.",
+        "Email could not be sent.",
+      ],
+      warning: ["Notification request received."],
+    } as const;
+
+    let log_status: keyof typeof STATUS_STATES | undefined;
+
+    for (let key in STATUS_STATES) {
+      if (
+        (
+          STATUS_STATES[key as keyof typeof STATUS_STATES] as readonly string[]
+        ).includes(log.status)
+      ) {
+        log_status = key as keyof typeof STATUS_STATES;
+      }
+    }
+
+    let badgeColor;
+
+    switch (log_status) {
+      case "success":
+        badgeColor = "success";
+        break;
+      case "failure":
+        badgeColor = "failure";
+        break;
+      case "warning":
+        badgeColor = "warning";
+        break;
+      default:
+        badgeColor = "Dark"; // Dark badges indicate a conditional statement needed for the status
+    }
+
+    return (
+      <div className="flex flex-wrap gap-2">
+        <Badge color={badgeColor}>{log_status}</Badge>
+      </div>
+    );
+  }
+
+  function getDrawerBadge(log: InAppNotificationLog | EmailNotificationLog) {
     let badgeColor;
 
     switch (log.status) {
@@ -210,35 +262,34 @@ function LogsTable() {
         </Table.Cell>
       </Table.Row>
     ) : (
-      subLogs.map((log) => {
-        return (
-          <Table.Row
-            key={log.log_id}
-            className="bg-white dark:border-gray-700 dark:bg-gray-800"
-          >
-            <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
-              {getBadge(log)}
-            </Table.Cell>
-            <Table.Cell>
-              <span
-                className="hover:text-blue-600 hover:underline cursor-pointer"
-                onClick={() => navigate(`/users?id=${log.user_id}`)}
-              >
-                {log.user_id}
-              </span>
-            </Table.Cell>
-            <Table.Cell>
-              {log.channel === "in_app" ? (
-                <FaRegBell size={16} />
-              ) : (
-                <MdOutlineEmail size={16} />
-              )}
-            </Table.Cell>
-            <Table.Cell>{log.message}</Table.Cell>
-            <Table.Cell>{formatDate(log.created_at)}</Table.Cell>
-          </Table.Row>
-        );
-      })
+      subLogs
+        .concat(selectedLog!)
+        .sort((logA, logB) => {
+          const dateA = new Date(logA.created_at);
+          const dateB = new Date(logB.created_at);
+
+          if (dateA > dateB) {
+            // date A came after date B
+            return -1;
+          } else if (dateA < dateB) {
+            return 1;
+          } else {
+            return 0;
+          }
+        })
+        .map((log) => {
+          return (
+            <Table.Row
+              key={log.log_id}
+              className="bg-white dark:border-gray-700 dark:bg-gray-800"
+            >
+              <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                {getDrawerBadge(log)}
+              </Table.Cell>
+              <Table.Cell>{formatDate(log.created_at)}</Table.Cell>
+            </Table.Row>
+          );
+        })
     );
   };
 
@@ -311,13 +362,13 @@ function LogsTable() {
             <Table.HeadCell>Channel</Table.HeadCell>
             <Table.HeadCell>Message</Table.HeadCell>
             <Table.HeadCell>Date</Table.HeadCell>
-            <Table.HeadCell />
           </Table.Head>
           <Table.Body className="divide-y">
             {tableData.length > 0 ? (
               tableData.map((log) => {
                 return (
                   <Table.Row
+                    onClick={() => handleOpen(log)}
                     key={log.log_id}
                     className="bg-white dark:border-gray-700 dark:bg-gray-800"
                   >
@@ -339,17 +390,8 @@ function LogsTable() {
                         <MdOutlineEmail size={16} />
                       )}
                     </Table.Cell>
-                    <Table.Cell>{log.message}</Table.Cell>
+                    <Table.Cell>{log.status}</Table.Cell>
                     <Table.Cell>{formatDate(log.created_at)}</Table.Cell>
-                    <Table.Cell>
-                      <span
-                        onClick={() => handleOpen(log)}
-                        className="font-medium hover:underline"
-                        style={{ cursor: "pointer" }}
-                      >
-                        Log Details
-                      </span>
-                    </Table.Cell>
                   </Table.Row>
                 );
               })
@@ -373,17 +415,40 @@ function LogsTable() {
           onClose={() => handleClose()}
           position="right"
         >
-          <Drawer.Header
-            title={"Associated Notification Logs:"}
-            titleIcon={() => <></>}
-          />
+          <Drawer.Header title={"Notification Logs:"} titleIcon={() => <></>} />
           <Drawer.Items>
+            <List
+              unstyled
+              className="max-w-md divide-y divide-gray-200 dark:divide-gray-700"
+            >
+              <List.Item className="pb-3 sm:pb-4">
+                <div className="flex items-center space-x-4 rtl:space-x-reverse">
+                  {selectedLog.channel === "in_app" ? (
+                    <FaRegBell size={16} />
+                  ) : (
+                    <MdOutlineEmail size={16} />
+                  )}
+                  <div className="min-w-0 flex-1">
+                    <p className="truncate text-sm font-medium text-gray-900 dark:text-white">
+                      <span
+                        className="hover:text-blue-600 hover:underline cursor-pointer"
+                        onClick={() =>
+                          navigate(`/users?id=${selectedLog.user_id}`)
+                        }
+                      >
+                        {selectedLog.user_id}
+                      </span>
+                    </p>
+                    <p className="truncate text-sm text-gray-500 dark:text-gray-400">
+                      Message: {selectedLog.message}
+                    </p>
+                  </div>
+                </div>
+              </List.Item>
+            </List>
             <Table hoverable>
               <Table.Head>
                 <Table.HeadCell>Status</Table.HeadCell>
-                <Table.HeadCell>Recipient ID</Table.HeadCell>
-                <Table.HeadCell>Channel</Table.HeadCell>
-                <Table.HeadCell>Message</Table.HeadCell>
                 <Table.HeadCell>Date</Table.HeadCell>
               </Table.Head>
               <Table.Body className="divide-y">{filterDrawer()}</Table.Body>

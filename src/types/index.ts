@@ -26,7 +26,15 @@ export interface Log {
   channel: string;
   user_id: string;
   created_at: string;
-  status: string;
+  status:
+    | "Notification not sent - channel disabled by user."
+    | "Notification queued for sending."
+    | "Notification read."
+    | "Notification deleted."
+    | "Email sent."
+    | "Notification unable to be broadcast."
+    | "Email could not be sent."
+    | "Notification request received.";
   notification_id: string;
   log_id: string;
   ttl: number;

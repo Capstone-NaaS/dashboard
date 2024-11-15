@@ -18,3 +18,11 @@ export const fetchDlq = async (
     console.error("error fetching dlq: ", error);
   }
 };
+
+export const COLORS = {
+  on: "#66BB6A",
+  off: "#E57373",
+  all: "#B0BEC5",
+  exclude: "#B0BEC5",
+  button: "purple",
+};

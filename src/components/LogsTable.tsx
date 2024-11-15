@@ -1,20 +1,47 @@
 import { useEffect, useState } from "react";
-import { Table, Badge, Drawer, Spinner } from "flowbite-react";
+import {
+  Badge,
+  Table,
+  TextInput,
+  Label,
+  Spinner,
+  Button,
+  Drawer,
+} from "flowbite-react";
+import { FaRegBell } from "react-icons/fa";
+import { MdOutlineEmail } from "react-icons/md";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import formatDate from "../utils/formatDate";
 import { InAppNotificationLog, EmailNotificationLog } from "../types";
-import { useNavigate } from "react-router-dom";
+import { COLORS } from "../utils";
+
+const FILTER_STATES = {
+  ON: "on",
+  EXCLUDE: "exclude",
+} as const;
+
+type FilterState = (typeof FILTER_STATES)[keyof typeof FILTER_STATES];
 
 function LogsTable() {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const initialIdFilter = searchParams.get("userid") || "";
 
   const [logs, setLogs] = useState<
+    (InAppNotificationLog | EmailNotificationLog)[]
+  >([]);
+  const [filteredLogs, setFilteredLogs] = useState<
     (InAppNotificationLog | EmailNotificationLog)[]
   >([]);
   const [selectedLog, setSelectedLog] = useState<
     InAppNotificationLog | EmailNotificationLog | undefined
   >();
-  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [isOpen, setIsOpen] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [idFilter, setIdFilter] = useState(initialIdFilter);
+  const [inAppFilter, setInAppFilter] = useState<FilterState>("on");
+  const [emailChannelFilter, setEmailChannelFilter] =
+    useState<FilterState>("on");
 
   const handleOpen = (log: InAppNotificationLog | EmailNotificationLog) => {
     setSelectedLog(log);
@@ -56,6 +83,27 @@ function LogsTable() {
 
     getNotificationLogs();
   }, []);
+
+  useEffect(() => {
+    const applyFilters = () => {
+      setFilteredLogs(
+        logs.filter((log) => {
+          const matchesId = log.user_id
+            .toLowerCase()
+            .includes(idFilter.toLowerCase());
+
+          const matchesChannel =
+            (inAppFilter === FILTER_STATES.ON && log.channel === "in_app") ||
+            (emailChannelFilter === FILTER_STATES.ON &&
+              log.channel === "email");
+
+          return matchesId && matchesChannel;
+        })
+      );
+    };
+
+    applyFilters();
+  }, [logs, idFilter, inAppFilter, emailChannelFilter]);
 
   function sortAndFilterLogs(
     logs: (InAppNotificationLog | EmailNotificationLog)[]
@@ -140,10 +188,114 @@ function LogsTable() {
     );
   }
 
-  const tableData = sortAndFilterLogs(logs);
+  const handleToggle = (
+    filterSetter: (value: React.SetStateAction<FilterState>) => void
+  ) => {
+    filterSetter((prev) =>
+      prev === FILTER_STATES.EXCLUDE ? FILTER_STATES.ON : FILTER_STATES.EXCLUDE
+    );
+  };
+
+  const filterDrawer = () => {
+    const subLogs = filteredLogs.filter(
+      (log) =>
+        log.notification_id === selectedLog!.notification_id &&
+        log.log_id !== selectedLog!.log_id
+    );
+
+    return subLogs.length === 0 ? (
+      <Table.Row>
+        <Table.Cell colSpan={5} className="text-center p-4 text-gray-500">
+          No associated notification logs to display.
+        </Table.Cell>
+      </Table.Row>
+    ) : (
+      subLogs.map((log) => {
+        return (
+          <Table.Row
+            key={log.log_id}
+            className="bg-white dark:border-gray-700 dark:bg-gray-800"
+          >
+            <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+              {getBadge(log)}
+            </Table.Cell>
+            <Table.Cell>
+              <span
+                className="hover:text-blue-600 hover:underline cursor-pointer"
+                onClick={() => navigate(`/users?id=${log.user_id}`)}
+              >
+                {log.user_id}
+              </span>
+            </Table.Cell>
+            <Table.Cell>
+              {log.channel === "in_app" ? (
+                <FaRegBell size={16} />
+              ) : (
+                <MdOutlineEmail size={16} />
+              )}
+            </Table.Cell>
+            <Table.Cell>{log.message}</Table.Cell>
+            <Table.Cell>{formatDate(log.created_at)}</Table.Cell>
+          </Table.Row>
+        );
+      })
+    );
+  };
+
+  const tableData = sortAndFilterLogs(filteredLogs);
 
   return (
-    <div className="overflow-x-auto flex-grow">
+    <div className="overflow-x-auto w-full">
+      <div className="flex flex-wrap gap-4 p-4 border-b">
+        <div className="flex flex-col">
+          <Label htmlFor="idFilter">Filter by Recipient ID</Label>
+          <TextInput
+            id="idFilter"
+            placeholder="Enter recipient ID"
+            value={idFilter}
+            onChange={(e) => {
+              setIdFilter(e.target.value);
+            }}
+          />
+        </div>
+        <div className="flex flex-col">
+          <Label className="mb-2">Filter by Channel</Label>
+          <div className="flex space-x-2">
+            <FaRegBell
+              color={COLORS[inAppFilter]}
+              size={24}
+              onClick={() => handleToggle(setInAppFilter)}
+              className={"cursor-pointer"}
+            />
+            <MdOutlineEmail
+              color={COLORS[emailChannelFilter]}
+              size={24}
+              onClick={() => handleToggle(setEmailChannelFilter)}
+              className={"cursor-pointer"}
+            />
+          </div>
+        </div>
+        <div className="flex flex-col">
+          <Label className="mb-2">Remove Filters</Label>
+          <div className="flex space-x-2">
+            <Button
+              pill
+              size="xs"
+              color={COLORS.button}
+              as="span"
+              className="cursor-pointer"
+              onClick={() => {
+                setIdFilter("");
+                setInAppFilter(FILTER_STATES.ON);
+                setEmailChannelFilter(FILTER_STATES.ON);
+              }}
+            >
+              Reset
+            </Button>
+          </div>
+        </div>
+      </div>
+
       {loading ? (
         <div className="flex justify-center items-center p-8">
           <Spinner aria-label="Loading" size="xl" className="text-gray-500" />
@@ -155,7 +307,7 @@ function LogsTable() {
         <Table hoverable>
           <Table.Head>
             <Table.HeadCell>Status</Table.HeadCell>
-            <Table.HeadCell>Recipient</Table.HeadCell>
+            <Table.HeadCell>Recipient ID</Table.HeadCell>
             <Table.HeadCell>Channel</Table.HeadCell>
             <Table.HeadCell>Message</Table.HeadCell>
             <Table.HeadCell>Date</Table.HeadCell>
@@ -180,7 +332,13 @@ function LogsTable() {
                         {log.user_id}
                       </span>
                     </Table.Cell>
-                    <Table.Cell>{log.channel}</Table.Cell>
+                    <Table.Cell>
+                      {log.channel === "in_app" ? (
+                        <FaRegBell size={16} />
+                      ) : (
+                        <MdOutlineEmail size={16} />
+                      )}
+                    </Table.Cell>
                     <Table.Cell>{log.message}</Table.Cell>
                     <Table.Cell>{formatDate(log.created_at)}</Table.Cell>
                     <Table.Cell>
@@ -223,35 +381,12 @@ function LogsTable() {
             <Table hoverable>
               <Table.Head>
                 <Table.HeadCell>Status</Table.HeadCell>
-                <Table.HeadCell>Recipient</Table.HeadCell>
+                <Table.HeadCell>Recipient ID</Table.HeadCell>
                 <Table.HeadCell>Channel</Table.HeadCell>
                 <Table.HeadCell>Message</Table.HeadCell>
                 <Table.HeadCell>Date</Table.HeadCell>
               </Table.Head>
-              <Table.Body className="divide-y">
-                {logs
-                  .filter(
-                    (log) =>
-                      log.notification_id === selectedLog.notification_id &&
-                      log.log_id !== selectedLog.log_id
-                  )
-                  .map((log) => {
-                    return (
-                      <Table.Row
-                        key={log.log_id}
-                        className="bg-white dark:border-gray-700 dark:bg-gray-800"
-                      >
-                        <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
-                          {getBadge(log)}
-                        </Table.Cell>
-                        <Table.Cell>{log.user_id}</Table.Cell>
-                        <Table.Cell>{log.channel}</Table.Cell>
-                        <Table.Cell>{log.message}</Table.Cell>
-                        <Table.Cell>{formatDate(log.created_at)}</Table.Cell>
-                      </Table.Row>
-                    );
-                  })}
-              </Table.Body>
+              <Table.Body className="divide-y">{filterDrawer()}</Table.Body>
             </Table>
           </Drawer.Items>
         </Drawer>

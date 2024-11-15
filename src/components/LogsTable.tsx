@@ -162,38 +162,49 @@ function LogsTable() {
             <Table.HeadCell />
           </Table.Head>
           <Table.Body className="divide-y">
-            {tableData.map((log) => {
-              return (
-                <Table.Row
-                  key={log.log_id}
-                  className="bg-white dark:border-gray-700 dark:bg-gray-800"
+            {tableData.length > 0 ? (
+              tableData.map((log) => {
+                return (
+                  <Table.Row
+                    key={log.log_id}
+                    className="bg-white dark:border-gray-700 dark:bg-gray-800"
+                  >
+                    <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                      {getBadge(log)}
+                    </Table.Cell>
+                    <Table.Cell>
+                      <span
+                        className="hover:text-blue-600 hover:underline cursor-pointer"
+                        onClick={() => navigate(`/users?id=${log.user_id}`)}
+                      >
+                        {log.user_id}
+                      </span>
+                    </Table.Cell>
+                    <Table.Cell>{log.channel}</Table.Cell>
+                    <Table.Cell>{log.message}</Table.Cell>
+                    <Table.Cell>{formatDate(log.created_at)}</Table.Cell>
+                    <Table.Cell>
+                      <span
+                        onClick={() => handleOpen(log)}
+                        className="font-medium hover:underline"
+                        style={{ cursor: "pointer" }}
+                      >
+                        Log Details
+                      </span>
+                    </Table.Cell>
+                  </Table.Row>
+                );
+              })
+            ) : (
+              <Table.Row>
+                <Table.Cell
+                  colSpan={5}
+                  className="text-center p-4 text-gray-500"
                 >
-                  <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
-                    {getBadge(log)}
-                  </Table.Cell>
-                  <Table.Cell>
-                    <span
-                      className="hover:text-blue-600 hover:underline cursor-pointer"
-                      onClick={() => navigate(`/users?id=${log.user_id}`)}
-                    >
-                      {log.user_id}
-                    </span>
-                  </Table.Cell>
-                  <Table.Cell>{log.channel}</Table.Cell>
-                  <Table.Cell>{log.message}</Table.Cell>
-                  <Table.Cell>{formatDate(log.created_at)}</Table.Cell>
-                  <Table.Cell>
-                    <span
-                      onClick={() => handleOpen(log)}
-                      className="font-medium hover:underline"
-                      style={{ cursor: "pointer" }}
-                    >
-                      Log Details
-                    </span>
-                  </Table.Cell>
-                </Table.Row>
-              );
-            })}
+                  No notification logs to display.
+                </Table.Cell>
+              </Table.Row>
+            )}
           </Table.Body>
         </Table>
       )}

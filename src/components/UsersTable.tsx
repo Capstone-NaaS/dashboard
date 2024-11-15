@@ -1,27 +1,25 @@
 "use client";
 import { useState, useEffect } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { Table, TextInput, Label, Spinner, Button } from "flowbite-react";
 import formatDate from "../utils/formatDate";
 import { User } from "../types/index";
 import { FaRegBell } from "react-icons/fa";
 import { MdOutlineEmail } from "react-icons/md";
 import { FaSortUp, FaSortDown } from "react-icons/fa";
-
-const COLORS = {
-  on: "#66BB6A",
-  off: "#E57373",
-  all: "#B0BEC5",
-};
+import { COLORS } from "../utils";
 
 const FILTER_STATES = {
   ALL: "all",
   ON: "on",
   OFF: "off",
 } as const;
+
 type FilterState = (typeof FILTER_STATES)[keyof typeof FILTER_STATES];
 
 function UsersTable() {
+  const navigate = useNavigate();
+
   const [searchParams] = useSearchParams();
   const initialIdFilter = searchParams.get("id") || "";
   const initialEmailFilter = searchParams.get("email") || "";
@@ -71,24 +69,16 @@ function UsersTable() {
     getAllUsers();
   }, []);
 
-  const handleToggle = (filterType: "inApp" | "email") => {
-    if (filterType === "inApp") {
-      setInAppFilter((prev) =>
-        prev === FILTER_STATES.ALL
-          ? FILTER_STATES.ON
-          : prev === FILTER_STATES.ON
-          ? FILTER_STATES.OFF
-          : FILTER_STATES.ALL
-      );
-    } else {
-      setEmailPrefFilter((prev) =>
-        prev === FILTER_STATES.ALL
-          ? FILTER_STATES.ON
-          : prev === FILTER_STATES.ON
-          ? FILTER_STATES.OFF
-          : FILTER_STATES.ALL
-      );
-    }
+  const handleToggle = (
+    filterSetter: (value: React.SetStateAction<FilterState>) => void
+  ) => {
+    filterSetter((prev) =>
+      prev === FILTER_STATES.ALL
+        ? FILTER_STATES.ON
+        : prev === FILTER_STATES.ON
+        ? FILTER_STATES.OFF
+        : FILTER_STATES.ALL
+    );
   };
 
   useEffect(() => {
@@ -137,14 +127,25 @@ function UsersTable() {
     if (newSortOrder) {
       setFilteredUsers((prevUsers) =>
         [...prevUsers].sort((a, b) => {
-          const aVal = a[column] || "";
-          const bVal = b[column] || "";
-          if (newSortOrder === "asc") return aVal > bVal ? 1 : -1;
-          return aVal < bVal ? 1 : -1;
+          const aVal = a[column];
+          const bVal = b[column];
+
+          if (aVal === undefined && bVal === undefined) return 0;
+          if (aVal === undefined) return 1;
+          if (bVal === undefined) return -1;
+
+          const dateA = new Date(aVal);
+          const dateB = new Date(bVal);
+
+          if (newSortOrder === "asc") {
+            return dateA > dateB ? 1 : dateA < dateB ? -1 : 0;
+          } else {
+            return dateA < dateB ? 1 : dateA > dateB ? -1 : 0;
+          }
         })
       );
     } else {
-      setFilteredUsers([...users]);
+      setFilteredUsers((prevUsers) => [...prevUsers]);
     }
   };
 
@@ -171,6 +172,15 @@ function UsersTable() {
               color={user.preferences.email ? COLORS.on : COLORS.off}
             />
           </div>
+        </Table.Cell>
+        <Table.Cell>
+          <span
+            onClick={() => navigate(`/notification-logs?userid=${user.id}`)}
+            className="font-medium hover:underline"
+            style={{ cursor: "pointer" }}
+          >
+            Get Logs
+          </span>
         </Table.Cell>
       </Table.Row>
     );
@@ -221,13 +231,13 @@ function UsersTable() {
             <FaRegBell
               color={COLORS[inAppFilter]}
               size={24}
-              onClick={() => handleToggle("inApp")}
+              onClick={() => handleToggle(setInAppFilter)}
               className={"cursor-pointer"}
             />
             <MdOutlineEmail
               color={COLORS[emailPrefFilter]}
               size={24}
-              onClick={() => handleToggle("email")}
+              onClick={() => handleToggle(setEmailPrefFilter)}
               className={"cursor-pointer"}
             />
           </div>
@@ -238,7 +248,7 @@ function UsersTable() {
             <Button
               pill
               size="xs"
-              color="purple"
+              color={COLORS.button}
               as="span"
               className="cursor-pointer"
               onClick={() => {
@@ -310,6 +320,7 @@ function UsersTable() {
                 </div>
               </Table.HeadCell>
               <Table.HeadCell>Preferences</Table.HeadCell>
+              <Table.HeadCell></Table.HeadCell>
             </Table.Head>
             <Table.Body className="divide-y">
               {generateRows(filteredUsers)}

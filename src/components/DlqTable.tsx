@@ -1,8 +1,18 @@
-import { Table, TextInput, Checkbox, Label, Spinner } from "flowbite-react";
+import { Table, TextInput, Label, Spinner, Button } from "flowbite-react";
 import { deadLog } from "../types";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { fetchDlq } from "../utils";
+import { FaRegBell } from "react-icons/fa";
+import { MdOutlineEmail } from "react-icons/md";
+
+import { fetchDlq, COLORS } from "../utils";
+
+const FILTER_STATES = {
+  ON: "on",
+  EXCLUDE: "exclude",
+} as const;
+
+type FilterState = (typeof FILTER_STATES)[keyof typeof FILTER_STATES];
 
 interface DlqTableProps {
   deadLogs: deadLog[];
@@ -22,10 +32,12 @@ function DlqTable({
   const [filteredLogs, setFilteredLogs] = useState<deadLog[]>([]);
   const [userIdFilter, setUserIdFilter] = useState("");
   const [emailFilter, setEmailFilter] = useState("");
-  const [showInApp, setShowInApp] = useState(false);
-  const [showEmail, setShowEmail] = useState(false);
+  const [inAppFilter, setInAppFilter] = useState<FilterState>("on");
+  const [emailChannelFilter, setEmailChannelFilter] =
+    useState<FilterState>("on");
 
   useEffect(() => {
+    setLoadingDLQ(true);
     (async () => {
       await fetchDlq(setDeadLogs);
       setLoadingDLQ(false);
@@ -43,14 +55,21 @@ function DlqTable({
         .toLowerCase()
         .includes(emailFilter.toLowerCase());
       const matchesChannel =
-        (!showInApp && !showEmail) ||
-        (showInApp && log.channel === "in_app") ||
-        (showEmail && log.channel === "email");
+        (inAppFilter === FILTER_STATES.ON && log.channel === "in_app") ||
+        (emailChannelFilter === FILTER_STATES.ON && log.channel === "email");
 
       return matchesUserId && matchesEmail && matchesChannel;
     });
     setFilteredLogs(newFilteredLogs);
-  }, [deadLogs, userIdFilter, emailFilter, showInApp, showEmail]);
+  }, [deadLogs, userIdFilter, emailFilter, inAppFilter, emailChannelFilter]);
+
+  const handleToggle = (
+    filterSetter: (value: React.SetStateAction<FilterState>) => void
+  ) => {
+    filterSetter((prev) =>
+      prev === FILTER_STATES.EXCLUDE ? FILTER_STATES.ON : FILTER_STATES.EXCLUDE
+    );
+  };
 
   return (
     <div className="overflow-x-auto w-full">
@@ -73,20 +92,42 @@ function DlqTable({
             onChange={(e) => setEmailFilter(e.target.value)}
           />
         </div>
-        <div className="flex items-center space-x-2">
-          <Checkbox
-            id="inAppFilter"
-            checked={showInApp}
-            onChange={() => setShowInApp(!showInApp)}
-          />
-          <Label htmlFor="inAppFilter">In-App</Label>
-
-          <Checkbox
-            id="emailFilterCheckbox"
-            checked={showEmail}
-            onChange={() => setShowEmail(!showEmail)}
-          />
-          <Label htmlFor="emailFilterCheckbox">Email</Label>
+        <div className="flex flex-col">
+          <Label className="mb-2">Filter by Channel</Label>
+          <div className="flex space-x-2">
+            <FaRegBell
+              color={COLORS[inAppFilter]}
+              size={24}
+              onClick={() => handleToggle(setInAppFilter)}
+              className={"cursor-pointer"}
+            />
+            <MdOutlineEmail
+              color={COLORS[emailChannelFilter]}
+              size={24}
+              onClick={() => handleToggle(setEmailChannelFilter)}
+              className={"cursor-pointer"}
+            />
+          </div>
+        </div>
+        <div className="flex flex-col">
+          <Label className="mb-2">Remove Filters</Label>
+          <div className="flex space-x-2">
+            <Button
+              pill
+              size="xs"
+              color={COLORS.button}
+              as="span"
+              className="cursor-pointer"
+              onClick={() => {
+                setUserIdFilter("");
+                setEmailFilter("");
+                setInAppFilter(FILTER_STATES.ON);
+                setEmailChannelFilter(FILTER_STATES.ON);
+              }}
+            >
+              Reset
+            </Button>
+          </div>
         </div>
       </div>
       {loadingDLQ ? (
@@ -120,7 +161,13 @@ function DlqTable({
                       {log.user_id}
                     </span>
                   </Table.Cell>
-                  <Table.Cell>{log.channel}</Table.Cell>
+                  <Table.Cell>
+                    {log.channel === "in_app" ? (
+                      <FaRegBell size={16} />
+                    ) : (
+                      <MdOutlineEmail size={16} />
+                    )}
+                  </Table.Cell>
                   <Table.Cell>{log.body.message}</Table.Cell>
                   <Table.Cell>{log.body.subject}</Table.Cell>
                   <Table.Cell>{log.body.receiver_email}</Table.Cell>

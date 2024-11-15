@@ -12,3 +12,29 @@ body {
 img {
   margin-left: 18px;
 }
+
+@keyframes slide-in {
+  0% {
+    transform: translateX(100%);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+/* @keyframes slide-out {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+} */
+
+.custom-slide-in {
+  animation: slide-in 0.2s ease-out forwards;
+}
+
+/* .custom-slide-out {
+  animation: slide-out 0.5s ease-in forwards;
+} */

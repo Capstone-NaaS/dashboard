@@ -56,7 +56,9 @@ function DlqTable({
     <div className="overflow-x-auto w-full">
       <div className="flex flex-wrap gap-4 p-4 border-b">
         <div className="flex flex-col">
-          <Label htmlFor="userIdFilter">Filter by Recipient ID</Label>
+          <Label htmlFor="userIdFilter" className="text-gray-100">
+            Filter by Recipient ID
+          </Label>
           <TextInput
             id="userIdFilter"
             placeholder="Enter recipient ID"
@@ -65,7 +67,9 @@ function DlqTable({
           />
         </div>
         <div className="flex flex-col">
-          <Label htmlFor="emailFilter">Filter by Receiver Email</Label>
+          <Label htmlFor="emailFilter" className="text-gray-100">
+            Filter by Receiver Email
+          </Label>
           <TextInput
             id="emailFilter"
             placeholder="Enter receiver email"
@@ -79,14 +83,18 @@ function DlqTable({
             checked={showInApp}
             onChange={() => setShowInApp(!showInApp)}
           />
-          <Label htmlFor="inAppFilter">In-App</Label>
+          <Label htmlFor="inAppFilter" className="text-gray-100">
+            In-App
+          </Label>
 
           <Checkbox
             id="emailFilterCheckbox"
             checked={showEmail}
             onChange={() => setShowEmail(!showEmail)}
           />
-          <Label htmlFor="emailFilterCheckbox">Email</Label>
+          <Label htmlFor="emailFilterCheckbox" className="text-gray-100">
+            Email
+          </Label>
         </div>
       </div>
       {loadingDLQ ? (

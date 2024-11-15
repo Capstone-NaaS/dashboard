@@ -119,7 +119,7 @@ function LogsTable() {
     }
 
     return (
-      <div className="flex flex-wrap gap-2">
+      <div className="flex flex-wrap">
         <Badge
           className="font-normal text-sm text-gray-900 dark:text-white"
           color={badgeColor}
@@ -133,7 +133,7 @@ function LogsTable() {
   const tableData = sortAndFilterLogs(logs);
 
   return (
-    <div className="overflow-x-auto flex-grow">
+    <>
       <Table hoverable className="rounded-lg overflow-hidden">
         <Table.Head>
           <Table.HeadCell className="bg-gray-100">Status</Table.HeadCell>
@@ -155,8 +155,10 @@ function LogsTable() {
                 </Table.Cell>
                 <Table.Cell>User {log.user_id}</Table.Cell>
                 <Table.Cell>{log.channel}</Table.Cell>
-                <Table.Cell>{log.message}</Table.Cell>
-                <Table.Cell>{formatDate(log.created_at)}</Table.Cell>
+                <Table.Cell className="truncate">{log.message}</Table.Cell>
+                <Table.Cell className="truncate">
+                  {formatDate(log.created_at)}
+                </Table.Cell>
                 {/* <Table.Cell */}
                 {/* // onClick={() => handleOpen(log)} */}
                 {/* // > */}
@@ -169,7 +171,7 @@ function LogsTable() {
       </Table>
       {selectedLog ? (
         <Drawer
-          className="w-3/4"
+          className="w-2/3 custom-slide-in"
           open={isOpen}
           onClose={() => handleClose()}
           position="right"
@@ -215,7 +217,7 @@ function LogsTable() {
           </Drawer.Items>
         </Drawer>
       ) : null}
-    </div>
+    </>
   );
 }
 

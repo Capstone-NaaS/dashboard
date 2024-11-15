@@ -23,7 +23,7 @@ function App() {
       <Flowbite theme={{ theme: flowbiteTheme }}>
         <Header />
         <main className="flex h-[calc(100vh-6rem)]">
-          <div className="w-1/5">
+          <div>
             <CategorySidebar hasDlq={deadLogs.length > 0} />
           </div>
           <SelectedWindow

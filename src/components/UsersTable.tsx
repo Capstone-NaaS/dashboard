@@ -62,7 +62,9 @@ function UsersTable() {
     <div className="overflow-x-auto w-full">
       <div className="flex flex-wrap gap-4 p-4 border-b">
         <div className="flex flex-col">
-          <Label htmlFor="idFilter">Filter by User ID</Label>
+          <Label htmlFor="idFilter" className="text-gray-100">
+            Filter by User ID
+          </Label>
           <TextInput
             id="idFilter"
             placeholder="Enter user ID"
@@ -71,7 +73,9 @@ function UsersTable() {
           />
         </div>
         <div className="flex flex-col">
-          <Label htmlFor="emailFilter">Filter by Email</Label>
+          <Label htmlFor="emailFilter" className="text-gray-100">
+            Filter by Email
+          </Label>
           <TextInput
             id="emailFilter"
             placeholder="Enter user email"

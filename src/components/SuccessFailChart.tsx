@@ -63,7 +63,6 @@ const SuccessFailChart: React.FC<ChartProps> = ({
     ],
   };
 
-  // Chart options
   const options = {
     responsive: true,
     scales: {

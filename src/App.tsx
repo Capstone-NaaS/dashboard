@@ -15,6 +15,7 @@ function App() {
   useEffect(() => {
     (async () => {
       await fetchDlq(setDeadLogs);
+      setLoadingDLQ(false);
     })();
   }, []);
 

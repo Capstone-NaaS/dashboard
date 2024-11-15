@@ -5,6 +5,10 @@ export interface User {
   created_at: string;
   last_seen: string;
   last_notified: string;
+  preferences: {
+    email: boolean;
+    in_app: boolean;
+  };
 }
 
 export interface deadLog {

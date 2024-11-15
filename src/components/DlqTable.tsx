@@ -19,6 +19,7 @@ interface DlqTableProps {
   setDeadLogs: React.Dispatch<React.SetStateAction<deadLog[]>>;
   loadingDLQ: boolean;
   setLoadingDLQ: React.Dispatch<React.SetStateAction<boolean>>;
+  fetchInProgressRef: React.MutableRefObject<boolean>;
 }
 
 function DlqTable({
@@ -26,6 +27,7 @@ function DlqTable({
   setDeadLogs,
   loadingDLQ,
   setLoadingDLQ,
+  fetchInProgressRef,
 }: DlqTableProps) {
   const navigate = useNavigate();
 
@@ -37,8 +39,9 @@ function DlqTable({
     useState<FilterState>("on");
 
   useEffect(() => {
-    setLoadingDLQ(true);
+    fetchInProgressRef.current = true;
     (async () => {
+      setLoadingDLQ(true);
       await fetchDlq(setDeadLogs);
       setLoadingDLQ(false);
     })();
@@ -46,7 +49,6 @@ function DlqTable({
 
   useEffect(() => {
     if (loadingDLQ) return;
-
     const newFilteredLogs = deadLogs.filter((log) => {
       const matchesUserId = log.user_id
         .toLowerCase()

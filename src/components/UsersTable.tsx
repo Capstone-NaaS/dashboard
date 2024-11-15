@@ -4,9 +4,22 @@ import { useSearchParams } from "react-router-dom";
 import { Table, TextInput, Label, Spinner, Button } from "flowbite-react";
 import formatDate from "../utils/formatDate";
 import { User } from "../types/index";
-import { CiBellOn } from "react-icons/ci";
+import { FaRegBell } from "react-icons/fa";
 import { MdOutlineEmail } from "react-icons/md";
 import { FaSortUp, FaSortDown } from "react-icons/fa";
+
+const COLORS = {
+  on: "#66BB6A",
+  off: "#E57373",
+  all: "#B0BEC5",
+};
+
+const FILTER_STATES = {
+  ALL: "all",
+  ON: "on",
+  OFF: "off",
+} as const;
+type FilterState = (typeof FILTER_STATES)[keyof typeof FILTER_STATES];
 
 function UsersTable() {
   const [searchParams] = useSearchParams();
@@ -18,11 +31,14 @@ function UsersTable() {
   const [loading, setLoading] = useState(true);
   const [idFilter, setIdFilter] = useState(initialIdFilter);
   const [emailFilter, setEmailFilter] = useState(initialEmailFilter);
-  const [inAppFilter, setInAppFilter] = useState(false);
-  const [emailPrefFilter, setEmailPrefFilter] = useState(false);
+  const [inAppFilter, setInAppFilter] = useState<FilterState>(
+    FILTER_STATES.ALL
+  );
+  const [emailPrefFilter, setEmailPrefFilter] = useState<FilterState>(
+    FILTER_STATES.ALL
+  );
   const [sortColumn, setSortColumn] = useState<string | null>(null);
   const [sortOrder, setSortOrder] = useState<"asc" | "desc" | null>(null);
-  const [filterActive, setFilterActive] = useState<boolean>(false);
 
   useEffect(() => {
     const getAllUsers = async () => {
@@ -55,18 +71,55 @@ function UsersTable() {
     getAllUsers();
   }, []);
 
-  useEffect(() => {
-    const newFilteredUsers = users.filter((user) => {
-      const matchesId = user.id.toLowerCase().includes(idFilter.toLowerCase());
-      const matchesEmail = user.email
-        .toLowerCase()
-        .includes(emailFilter.toLowerCase());
-      const matchesInAppPref = user.preferences.in_app === inAppFilter;
-      const matchesEmailPref = user.preferences.email === emailPrefFilter;
+  const handleToggle = (filterType: "inApp" | "email") => {
+    if (filterType === "inApp") {
+      setInAppFilter((prev) =>
+        prev === FILTER_STATES.ALL
+          ? FILTER_STATES.ON
+          : prev === FILTER_STATES.ON
+          ? FILTER_STATES.OFF
+          : FILTER_STATES.ALL
+      );
+    } else {
+      setEmailPrefFilter((prev) =>
+        prev === FILTER_STATES.ALL
+          ? FILTER_STATES.ON
+          : prev === FILTER_STATES.ON
+          ? FILTER_STATES.OFF
+          : FILTER_STATES.ALL
+      );
+    }
+  };
 
-      return matchesId && matchesEmail && matchesInAppPref && matchesEmailPref;
-    });
-    setFilteredUsers(newFilteredUsers);
+  useEffect(() => {
+    const applyFilters = () => {
+      setFilteredUsers(
+        users.filter((user) => {
+          const matchesId = user.id
+            .toLowerCase()
+            .includes(idFilter.toLowerCase());
+          const matchesEmail = user.email
+            .toLowerCase()
+            .includes(emailFilter.toLowerCase());
+
+          const matchesInAppPref =
+            inAppFilter === FILTER_STATES.ALL ||
+            (inAppFilter === FILTER_STATES.ON && user.preferences.in_app) ||
+            (inAppFilter === FILTER_STATES.OFF && !user.preferences.in_app);
+
+          const matchesEmailPref =
+            emailPrefFilter === FILTER_STATES.ALL ||
+            (emailPrefFilter === FILTER_STATES.ON && user.preferences.email) ||
+            (emailPrefFilter === FILTER_STATES.OFF && !user.preferences.email);
+
+          return (
+            matchesId && matchesEmail && matchesInAppPref && matchesEmailPref
+          );
+        })
+      );
+    };
+
+    applyFilters();
   }, [users, idFilter, emailFilter, inAppFilter, emailPrefFilter]);
 
   const handleSort = (column: "created_at" | "last_seen" | "last_notified") => {
@@ -109,13 +162,13 @@ function UsersTable() {
         <Table.Cell>{formatDate(user.last_notified)}</Table.Cell>
         <Table.Cell>
           <div className="flex space-x-2">
-            <CiBellOn
+            <FaRegBell
               size={24}
-              color={user.preferences.in_app ? "#1E90FF" : "#B0C4DE"}
+              color={user.preferences.in_app ? COLORS.on : COLORS.off}
             />
             <MdOutlineEmail
               size={24}
-              color={user.preferences.email ? "#1E90FF" : "#B0C4DE"}
+              color={user.preferences.email ? COLORS.on : COLORS.off}
             />
           </div>
         </Table.Cell>
@@ -147,7 +200,6 @@ function UsersTable() {
             placeholder="Enter user ID"
             value={idFilter}
             onChange={(e) => {
-              setFilterActive(true);
               setIdFilter(e.target.value);
             }}
           />
@@ -159,7 +211,6 @@ function UsersTable() {
             placeholder="Enter user email"
             value={emailFilter}
             onChange={(e) => {
-              setFilterActive(true);
               setEmailFilter(e.target.value);
             }}
           />
@@ -167,23 +218,17 @@ function UsersTable() {
         <div className="flex flex-col">
           <Label className="mb-2">Filter by Preferences</Label>
           <div className="flex space-x-2">
-            <CiBellOn
+            <FaRegBell
+              color={COLORS[inAppFilter]}
               size={24}
-              color={inAppFilter ? "#1E90FF" : "#B0C4DE"}
-              onClick={() => {
-                setFilterActive(true);
-                setInAppFilter(!inAppFilter);
-              }}
-              className="cursor-pointer"
+              onClick={() => handleToggle("inApp")}
+              className={"cursor-pointer"}
             />
             <MdOutlineEmail
+              color={COLORS[emailPrefFilter]}
               size={24}
-              color={emailPrefFilter ? "#1E90FF" : "#B0C4DE"}
-              onClick={() => {
-                setFilterActive(true);
-                setEmailPrefFilter(!emailPrefFilter);
-              }}
-              className="cursor-pointer"
+              onClick={() => handleToggle("email")}
+              className={"cursor-pointer"}
             />
           </div>
         </div>
@@ -199,9 +244,8 @@ function UsersTable() {
               onClick={() => {
                 setIdFilter("");
                 setEmailFilter("");
-                setInAppFilter(false);
-                setEmailPrefFilter(false);
-                setFilterActive(false);
+                setInAppFilter(FILTER_STATES.ALL);
+                setEmailPrefFilter(FILTER_STATES.ALL);
               }}
             >
               Reset
@@ -251,7 +295,6 @@ function UsersTable() {
                     ) : null)}
                 </div>
               </Table.HeadCell>
-
               <Table.HeadCell
                 onClick={() => handleSort("last_notified")}
                 className="cursor-pointer"
@@ -269,9 +312,7 @@ function UsersTable() {
               <Table.HeadCell>Preferences</Table.HeadCell>
             </Table.Head>
             <Table.Body className="divide-y">
-              {!filterActive
-                ? generateRows(users) // filter not active gen rows for all users
-                : generateRows(filteredUsers)}
+              {generateRows(filteredUsers)}
             </Table.Body>
           </Table>
         )}

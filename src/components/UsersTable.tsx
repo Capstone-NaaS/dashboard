@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
-import { Table, TextInput, Label, Spinner } from "flowbite-react";
+import { Table, TextInput, Label, Spinner, Button } from "flowbite-react";
 import formatDate from "../utils/formatDate";
 import { User } from "../types/index";
 import { CiBellOn } from "react-icons/ci";
@@ -18,10 +18,11 @@ function UsersTable() {
   const [loading, setLoading] = useState(true);
   const [idFilter, setIdFilter] = useState(initialIdFilter);
   const [emailFilter, setEmailFilter] = useState(initialEmailFilter);
-  const [inAppFilter, setInAppFilter] = useState(true);
-  const [emailPrefFilter, setEmailPrefFilter] = useState(true);
+  const [inAppFilter, setInAppFilter] = useState(false);
+  const [emailPrefFilter, setEmailPrefFilter] = useState(false);
   const [sortColumn, setSortColumn] = useState<string | null>(null);
   const [sortOrder, setSortOrder] = useState<"asc" | "desc" | null>(null);
+  const [filterActive, setFilterActive] = useState<boolean>(false);
 
   useEffect(() => {
     const getAllUsers = async () => {
@@ -94,6 +95,48 @@ function UsersTable() {
     }
   };
 
+  const generateUserRow = (user: User) => {
+    return (
+      <Table.Row
+        key={user.id}
+        className="bg-white dark:border-gray-700 dark:bg-gray-800"
+      >
+        <Table.Cell>{user.id}</Table.Cell>
+        <Table.Cell>{user.name}</Table.Cell>
+        <Table.Cell>{user.email}</Table.Cell>
+        <Table.Cell>{formatDate(user.created_at)}</Table.Cell>
+        <Table.Cell>{formatDate(user.last_seen)}</Table.Cell>
+        <Table.Cell>{formatDate(user.last_notified)}</Table.Cell>
+        <Table.Cell>
+          <div className="flex space-x-2">
+            <CiBellOn
+              size={24}
+              color={user.preferences.in_app ? "#1E90FF" : "#B0C4DE"}
+            />
+            <MdOutlineEmail
+              size={24}
+              color={user.preferences.email ? "#1E90FF" : "#B0C4DE"}
+            />
+          </div>
+        </Table.Cell>
+      </Table.Row>
+    );
+  };
+
+  const generateRows = (users: User[]) => {
+    if (users.length === 0) {
+      return (
+        <Table.Row>
+          <Table.Cell colSpan={6} className="text-center p-4 text-gray-500">
+            No users to display.
+          </Table.Cell>
+        </Table.Row>
+      );
+    } else {
+      return users.map(generateUserRow);
+    }
+  };
+
   return (
     <div className="overflow-x-auto w-full">
       <div className="flex flex-wrap gap-4 p-4 border-b">
@@ -103,7 +146,10 @@ function UsersTable() {
             id="idFilter"
             placeholder="Enter user ID"
             value={idFilter}
-            onChange={(e) => setIdFilter(e.target.value)}
+            onChange={(e) => {
+              setFilterActive(true);
+              setIdFilter(e.target.value);
+            }}
           />
         </div>
         <div className="flex flex-col">
@@ -112,7 +158,10 @@ function UsersTable() {
             id="emailFilter"
             placeholder="Enter user email"
             value={emailFilter}
-            onChange={(e) => setEmailFilter(e.target.value)}
+            onChange={(e) => {
+              setFilterActive(true);
+              setEmailFilter(e.target.value);
+            }}
           />
         </div>
         <div className="flex flex-col">
@@ -121,15 +170,42 @@ function UsersTable() {
             <CiBellOn
               size={24}
               color={inAppFilter ? "#1E90FF" : "#B0C4DE"}
-              onClick={() => setInAppFilter(!inAppFilter)}
+              onClick={() => {
+                setFilterActive(true);
+                setInAppFilter(!inAppFilter);
+              }}
               className="cursor-pointer"
             />
             <MdOutlineEmail
               size={24}
               color={emailPrefFilter ? "#1E90FF" : "#B0C4DE"}
-              onClick={() => setEmailPrefFilter(!emailPrefFilter)}
+              onClick={() => {
+                setFilterActive(true);
+                setEmailPrefFilter(!emailPrefFilter);
+              }}
               className="cursor-pointer"
             />
+          </div>
+        </div>
+        <div className="flex flex-col">
+          <Label className="mb-2">Remove Filters</Label>
+          <div className="flex space-x-2">
+            <Button
+              pill
+              size="xs"
+              color="purple"
+              as="span"
+              className="cursor-pointer"
+              onClick={() => {
+                setIdFilter("");
+                setEmailFilter("");
+                setInAppFilter(false);
+                setEmailPrefFilter(false);
+                setFilterActive(false);
+              }}
+            >
+              Reset
+            </Button>
           </div>
         </div>
       </div>
@@ -193,44 +269,9 @@ function UsersTable() {
               <Table.HeadCell>Preferences</Table.HeadCell>
             </Table.Head>
             <Table.Body className="divide-y">
-              {filteredUsers.length > 0 ? (
-                filteredUsers.map((user) => (
-                  <Table.Row
-                    key={user.id}
-                    className="bg-white dark:border-gray-700 dark:bg-gray-800"
-                  >
-                    <Table.Cell>{user.id}</Table.Cell>
-                    <Table.Cell>{user.name}</Table.Cell>
-                    <Table.Cell>{user.email}</Table.Cell>
-                    <Table.Cell>{formatDate(user.created_at)}</Table.Cell>
-                    <Table.Cell>{formatDate(user.last_seen)}</Table.Cell>
-                    <Table.Cell>{formatDate(user.last_notified)}</Table.Cell>
-                    <Table.Cell>
-                      <div className="flex space-x-2">
-                        <CiBellOn
-                          size={24}
-                          color={
-                            user.preferences.in_app ? "#1E90FF" : "#B0C4DE"
-                          }
-                        />
-                        <MdOutlineEmail
-                          size={24}
-                          color={user.preferences.email ? "#1E90FF" : "#B0C4DE"}
-                        />
-                      </div>
-                    </Table.Cell>
-                  </Table.Row>
-                ))
-              ) : (
-                <Table.Row>
-                  <Table.Cell
-                    colSpan={6}
-                    className="text-center p-4 text-gray-500"
-                  >
-                    No users to display.
-                  </Table.Cell>
-                </Table.Row>
-              )}
+              {!filterActive
+                ? generateRows(users) // filter not active gen rows for all users
+                : generateRows(filteredUsers)}
             </Table.Body>
           </Table>
         )}

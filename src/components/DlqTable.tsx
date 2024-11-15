@@ -1,11 +1,4 @@
-import {
-  Table,
-  TextInput,
-  Checkbox,
-  Label,
-  Spinner,
-  Button,
-} from "flowbite-react";
+import { Table, TextInput, Label, Spinner, Button } from "flowbite-react";
 import { deadLog } from "../types";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -44,6 +37,7 @@ function DlqTable({
     useState<FilterState>("on");
 
   useEffect(() => {
+    setLoadingDLQ(true);
     (async () => {
       await fetchDlq(setDeadLogs);
       setLoadingDLQ(false);

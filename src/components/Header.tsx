@@ -7,13 +7,13 @@ function Header() {
     <Navbar fluid rounded>
       <Navbar.Brand>
         <img
-          src="./public/transparent_logo.png"
-          className="mr-3 h-20 sm:h-25"
+          src="./public/white_horizontal_transparent.png"
+          className="mr-3 h-20 sm:h-25 transform translate-x-4 translate-y-2"
           alt="Telegraph Logo"
         />
-        <span className="self-center whitespace-nowrap text-3xl text-[#F5F5F5] mt-1 transform translate-x-[-4px]">
+        {/* <span className="self-center whitespace-nowrap text-3xl text-[#F5F5F5] mt-1 transform translate-x-[-4px]">
           Telegraph
-        </span>
+        </span> */}
       </Navbar.Brand>
       <Navbar.Toggle />
       <Navbar.Collapse className="transform translate-x-[-18px]">

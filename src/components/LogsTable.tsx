@@ -182,13 +182,8 @@ function LogsTable() {
     }
 
     return (
-      <div className="flex flex-wrap">
-        <Badge
-          className="font-normal text-sm text-gray-900 dark:text-white"
-          color={badgeColor}
-        >
-          {log.status}
-        </Badge>
+      <div className="flex flex-wrap gap-2">
+        <Badge color={badgeColor}>{log.status}</Badge>
       </div>
     );
   }
@@ -210,7 +205,7 @@ function LogsTable() {
 
     return subLogs.length === 0 ? (
       <Table.Row>
-        <Table.Cell colSpan={5} className="text-center p-4 text-gray-500">
+        <Table.Cell colSpan={5} className="text-center p-4">
           No associated notification logs to display.
         </Table.Cell>
       </Table.Row>
@@ -219,14 +214,14 @@ function LogsTable() {
         return (
           <Table.Row
             key={log.log_id}
-            className="bg-white dark:border-gray-700 dark:bg-gray-800"
+            className="dark:border-gray-700 dark:bg-gray-800"
           >
-            <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+            <Table.Cell className="whitespace-nowrap font-medium dark:text-white">
               {getBadge(log)}
             </Table.Cell>
             <Table.Cell>
               <span
-                className="hover:text-blue-600 hover:underline cursor-pointer"
+                className="hover:underline cursor-pointer"
                 onClick={() => navigate(`/users?id=${log.user_id}`)}
               >
                 {log.user_id}
@@ -252,9 +247,12 @@ function LogsTable() {
   return (
     <div className="overflow-x-auto w-full">
       <div className="flex flex-wrap gap-4 p-4 border-b">
-        <div className="flex flex-col">
-          <Label htmlFor="idFilter">Filter by Recipient ID</Label>
+        {/* <div>
+          <h2>Notification Logs Filtering: </h2>
+        </div> */}
+        <div className="flex flex-col transform translate-y-[-8px]">
           <TextInput
+            style={{ background: "#233142", color: "#F3F4F5" }}
             id="idFilter"
             placeholder="Enter recipient ID"
             value={idFilter}
@@ -264,8 +262,7 @@ function LogsTable() {
           />
         </div>
         <div className="flex flex-col">
-          <Label className="mb-2">Filter by Channel</Label>
-          <div className="flex space-x-2">
+          <div className="flex space-x-4">
             <FaRegBell
               color={COLORS[inAppFilter]}
               size={24}
@@ -281,8 +278,7 @@ function LogsTable() {
           </div>
         </div>
         <div className="flex flex-col">
-          <Label className="mb-2">Remove Filters</Label>
-          <div className="flex space-x-2">
+          <div className="flex space-x-2 tranform translate-y-[-3px]">
             <Button
               pill
               size="xs"
@@ -309,14 +305,15 @@ function LogsTable() {
           </span>
         </div>
       ) : (
-        <Table hoverable className="rounded-lg overflow-hidden">
+        <Table hoverable>
           <Table.Head>
-            <Table.HeadCell className="bg-gray-100">Status</Table.HeadCell>
-            <Table.HeadCell className="bg-gray-100">Recipient ID</Table.HeadCell>
-            <Table.HeadCell className="bg-gray-100">Channel</Table.HeadCell>
-            <Table.HeadCell className="bg-gray-100">Message</Table.HeadCell>
-            <Table.HeadCell className="bg-gray-100">Date</Table.HeadCell>
-            <Table.HeadCell />
+            <Table.HeadCell className="bg-[#233142]">Status</Table.HeadCell>
+            <Table.HeadCell className="bg-[#233142]">
+              Recipient ID
+            </Table.HeadCell>
+            <Table.HeadCell className="bg-[#233142]">Channel</Table.HeadCell>
+            <Table.HeadCell className="bg-[#233142]">Message</Table.HeadCell>
+            <Table.HeadCell className="bg-[#233142]">Date</Table.HeadCell>
           </Table.Head>
           <Table.Body className="divide-y">
             {tableData.length > 0 ? (
@@ -324,14 +321,15 @@ function LogsTable() {
                 return (
                   <Table.Row
                     key={log.log_id}
-                    className="bg-white dark:border-gray-700 dark:bg-gray-800 hover:bg-gray-100 cursor-pointer"
+                    className="hover:bg-[#6B778D] cursor-pointer"
+                    onClick={() => handleOpen(log)}
                   >
-                    <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                    <Table.Cell className="whitespace-nowrap font-medium dark:text-white">
                       {getBadge(log)}
                     </Table.Cell>
                     <Table.Cell>
                       <span
-                        className="hover:text-blue-600 hover:underline cursor-pointer"
+                        className=" hover:underline cursor-pointer"
                         onClick={() => navigate(`/users?id=${log.user_id}`)}
                       >
                         {log.user_id}
@@ -344,33 +342,21 @@ function LogsTable() {
                         <MdOutlineEmail size={16} />
                       )}
                     </Table.Cell>
-                    <Table.Cell className="truncate">{log.message}</Table.Cell>
-                    <Table.Cell>{formatDate(log.created_at)}</Table.Cell>
-                    <Table.Cell>
-                      <span
-                        onClick={() => handleOpen(log)}
-                        className="font-medium hover:underline"
-                        style={{ cursor: "pointer" }}
-                      >
-                        Log Details
-                      </span>
+                    <Table.Cell>{log.message}</Table.Cell>
+                    <Table.Cell className="truncate">
+                      {formatDate(log.created_at)}
                     </Table.Cell>
                   </Table.Row>
                 );
               })
             ) : (
               <Table.Row>
-                <Table.Cell
-                  colSpan={5}
-                  className="text-center p-4 text-gray-500"
-                >
+                <Table.Cell colSpan={5} className="text-center p-4">
                   No notification logs to display.
                 </Table.Cell>
-                {/* <Table.Cell */}
-                {/* // onClick={() => handleOpen(log)} */}
-                {/* // > */}
-                {/* //   <p className="font-medium hover:underline">Log Details</p> */}
-                {/* // </Table.Cell> */}
+                <Table.Cell onClick={() => handleOpen(log)}>
+                  <p className="font-medium hover:underline">Log Details</p>
+                </Table.Cell>
               </Table.Row>
             )}
           </Table.Body>
@@ -401,7 +387,7 @@ function LogsTable() {
           </Drawer.Items>
         </Drawer>
       ) : null}
-    </>
+    </div>
   );
 }
 

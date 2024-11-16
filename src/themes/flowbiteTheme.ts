@@ -3,11 +3,11 @@ import { CustomFlowbiteTheme } from "flowbite-react";
 const flowbiteTheme: CustomFlowbiteTheme = {
   navbar: {
     root: {
-      base: "bg-[#1B1B2F]",
+      base: "bg-[#233142]",
     },
     link: {
       active: {
-        on: "text-gray-100 ",
+        on: "text-gray-100",
         off: "text-slate-400",
       },
     },
@@ -15,11 +15,11 @@ const flowbiteTheme: CustomFlowbiteTheme = {
   sidebar: {
     root: {
       inner:
-        "h-full overflow-y-auto overflow-x-hidden rounded bg-[#1b1b2f] px-3 py-4 dark:bg-gray-800 ml-5",
+        "h-full overflow-y-auto overflow-x-hidden rounded bg-[#233142] px-3 py-4 dark:bg-gray-800 ml-5",
     },
     item: {
-      base: "flex items-center justify-center rounded-lg p-2 text-base font-normal text-gray-400 hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700",
-      active: "bg-gray-100 dark:bg-gray-700 text-[#000000]",
+      base: "flex items-center justify-center rounded-lg p-2 text-base font-normal text-gray-400 hover:bg-[#6B778D] dark:text-white dark:hover:bg-gray-700",
+      active: "bg-[#6B778D] dark:bg-gray-700 text-gray-100",
       collapsed: {
         insideCollapse: "group w-full pl-8 transition duration-75",
         noIcon: "font-bold",
@@ -29,7 +29,7 @@ const flowbiteTheme: CustomFlowbiteTheme = {
       },
       icon: {
         base: "h-6 w-6 flex-shrink-0 text-gray-500 transition duration-75 group-hover:text-gray-900 dark:text-gray-400 dark:group-hover:text-white",
-        active: "text-[#000000] dark:text-gray-100",
+        active: "text-[#7F00FF] dark:text-gray-100",
       },
       label: "",
       listItem: "",
@@ -55,16 +55,16 @@ const flowbiteTheme: CustomFlowbiteTheme = {
   },
   table: {
     root: {
-      base: "w-full text-left text-sm text-gray-500 dark:text-gray-400 mb-4",
+      base: "w-full text-left text-sm text-gray-500 dark:text-gray-400 bg-[#233142] mb-4 ",
     },
     head: {
-      base: "bg-gray-100 text-sm font-normal text-gray-900 dark:text-white", // Font consistency for the table header
+      base: "text-sm font-normal dark:text-white bg-[#233142]", // Font consistency for the table header
     },
     body: {
-      base: "text-sm font-normal text-gray-900 dark:text-white", // Font consistency for table body
+      base: "text-sm font-normal text-gray-300 dark:text-white bg-[#233142]", // Font consistency for table body
     },
     row: {
-      base: "text-sm font-normal text-gray-900 dark:text-white", // Font consistency for table rows
+      base: "text-sm font-normal text-gray-300 dark:text-white bg-[#233142] border-slate-700", // Font consistency for table rows
     },
   },
 };

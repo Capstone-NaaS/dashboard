@@ -153,7 +153,7 @@ function UsersTable() {
     return (
       <Table.Row
         key={user.id}
-        className="bg-white dark:border-gray-700 dark:bg-gray-800"
+        className="dark:border-gray-700 dark:bg-gray-800 hover:bg-[#6B778D]"
       >
         <Table.Cell>{user.id}</Table.Cell>
         <Table.Cell>{user.name}</Table.Cell>
@@ -203,11 +203,9 @@ function UsersTable() {
   return (
     <div className="overflow-x-auto w-full">
       <div className="flex flex-wrap gap-4 p-4 border-b">
-        <div className="flex flex-col">
-          <Label htmlFor="idFilter" className="text-gray-100">
-            Filter by User ID
-          </Label>
+        <div className="flex flex-col transform translate-y-[-8px]">
           <TextInput
+            style={{ background: "#233142", color: "#F3F4F5" }}
             id="idFilter"
             placeholder="Enter user ID"
             value={idFilter}
@@ -216,11 +214,9 @@ function UsersTable() {
             }}
           />
         </div>
-        <div className="flex flex-col">
-          <Label htmlFor="emailFilter" className="text-gray-100">
-            Filter by Email
-          </Label>
+        <div className="flex flex-col transform translate-y-[-8px]">
           <TextInput
+            style={{ background: "#233142", color: "#F3F4F5" }}
             id="emailFilter"
             placeholder="Enter user email"
             value={emailFilter}
@@ -230,8 +226,7 @@ function UsersTable() {
           />
         </div>
         <div className="flex flex-col">
-          <Label className="mb-2">Filter by Preferences</Label>
-          <div className="flex space-x-2">
+          <div className="flex space-x-4">
             <FaRegBell
               color={COLORS[inAppFilter]}
               size={24}
@@ -247,8 +242,7 @@ function UsersTable() {
           </div>
         </div>
         <div className="flex flex-col">
-          <Label className="mb-2">Remove Filters</Label>
-          <div className="flex space-x-2">
+          <div className="flex space-x-2 tranform translate-y-[-3px]">
             <Button
               pill
               size="xs"
@@ -275,14 +269,14 @@ function UsersTable() {
             <span className="ml-3 text-gray-500">Loading users...</span>
           </div>
         ) : (
-          <Table className="rounded-lg overflow-hidden">
+          <Table>
             <Table.Head>
-              <Table.HeadCell>User ID</Table.HeadCell>
-              <Table.HeadCell>Name</Table.HeadCell>
-              <Table.HeadCell>Email</Table.HeadCell>
+              <Table.HeadCell className="bg-[#233142]">User ID</Table.HeadCell>
+              <Table.HeadCell className="bg-[#233142]">Name</Table.HeadCell>
+              <Table.HeadCell className="bg-[#233142]">Email</Table.HeadCell>
               <Table.HeadCell
                 onClick={() => handleSort("created_at")}
-                className="cursor-pointer"
+                className="cursor-pointer bg-[#233142]"
               >
                 <div className="flex items-center">
                   Created At{" "}
@@ -297,7 +291,7 @@ function UsersTable() {
 
               <Table.HeadCell
                 onClick={() => handleSort("last_seen")}
-                className="cursor-pointer"
+                className="cursor-pointer bg-[#233142]"
               >
                 <div className="flex items-center">
                   Last Seen{" "}
@@ -311,7 +305,7 @@ function UsersTable() {
               </Table.HeadCell>
               <Table.HeadCell
                 onClick={() => handleSort("last_notified")}
-                className="cursor-pointer"
+                className="cursor-pointer bg-[#233142]"
               >
                 <div className="flex items-center">
                   Last Notified{" "}
@@ -323,8 +317,10 @@ function UsersTable() {
                     ) : null)}
                 </div>
               </Table.HeadCell>
-              <Table.HeadCell>Preferences</Table.HeadCell>
-              <Table.HeadCell></Table.HeadCell>
+              <Table.HeadCell className="bg-[#233142]">
+                Preferences
+              </Table.HeadCell>
+              <Table.HeadCell className="bg-[#233142]"></Table.HeadCell>
             </Table.Head>
             <Table.Body className="divide-y">
               {generateRows(filteredUsers)}

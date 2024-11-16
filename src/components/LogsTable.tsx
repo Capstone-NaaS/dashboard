@@ -357,10 +357,10 @@ function LogsTable() {
       ) : (
         <Table hoverable>
           <Table.Head>
-            <Table.HeadCell>Status</Table.HeadCell>
+            <Table.HeadCell>Telegraph Status</Table.HeadCell>
             <Table.HeadCell>Recipient ID</Table.HeadCell>
             <Table.HeadCell>Channel</Table.HeadCell>
-            <Table.HeadCell>Message</Table.HeadCell>
+            <Table.HeadCell>Notification Status</Table.HeadCell>
             <Table.HeadCell>Date</Table.HeadCell>
           </Table.Head>
           <Table.Body className="divide-y">
@@ -448,7 +448,7 @@ function LogsTable() {
             </List>
             <Table hoverable>
               <Table.Head>
-                <Table.HeadCell>Status</Table.HeadCell>
+                <Table.HeadCell>Notification Status</Table.HeadCell>
                 <Table.HeadCell>Date</Table.HeadCell>
               </Table.Head>
               <Table.Body className="divide-y">{filterDrawer()}</Table.Body>

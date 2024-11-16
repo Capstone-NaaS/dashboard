@@ -10,6 +10,7 @@ interface SelectedWindowProps {
   setDeadLogs: React.Dispatch<React.SetStateAction<deadLog[]>>;
   loadingDLQ: boolean;
   setLoadingDLQ: React.Dispatch<React.SetStateAction<boolean>>;
+  fetchInProgressRef: React.MutableRefObject<boolean>;
 }
 
 function SelectedWindow({
@@ -17,6 +18,7 @@ function SelectedWindow({
   setDeadLogs,
   loadingDLQ,
   setLoadingDLQ,
+  fetchInProgressRef,
 }: SelectedWindowProps) {
   const location = useLocation();
 
@@ -31,6 +33,7 @@ function SelectedWindow({
           setDeadLogs={setDeadLogs}
           loadingDLQ={loadingDLQ}
           setLoadingDLQ={setLoadingDLQ}
+          fetchInProgressRef={fetchInProgressRef}
         />
       )}
     </>

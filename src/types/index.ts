@@ -29,6 +29,7 @@ export interface Log {
   status:
     | "Notification not sent - channel disabled by user."
     | "Notification queued for sending."
+    | "Notification sent."
     | "Notification read."
     | "Notification deleted."
     | "Email sent."

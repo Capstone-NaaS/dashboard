@@ -154,11 +154,11 @@ function LogsTable() {
     const STATUS_STATES = {
       success: [
         "Notification not sent - channel disabled by user.",
-        "Notification queued for sending.",
         "Notification read.",
         "Notification deleted.",
         "Email sent.",
       ],
+      pending: ["Notification queued for sending."], // here
       failure: [
         "Notification unable to be broadcast.",
         "Email could not be sent.",
@@ -184,6 +184,9 @@ function LogsTable() {
       case "success":
         badgeColor = "success";
         break;
+      case "pending":
+        badgeColor = "info";
+        break;
       case "failure":
         badgeColor = "failure";
         break;
@@ -207,6 +210,9 @@ function LogsTable() {
     switch (log.status) {
       case "Notification request received.":
         badgeColor = "pink";
+        break;
+      case "Notification sent.":
+        badgeColor = "success";
         break;
       case "Notification not sent - channel disabled by user.":
         badgeColor = "warning";

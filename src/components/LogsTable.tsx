@@ -155,6 +155,7 @@ function LogsTable() {
       success: [
         "Notification not sent - channel disabled by user.",
         "Notification read.",
+        "Notification sent.",
         "Notification deleted.",
         "Email sent.",
       ],

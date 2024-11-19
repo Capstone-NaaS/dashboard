@@ -154,11 +154,12 @@ function LogsTable() {
     const STATUS_STATES = {
       success: [
         "Notification not sent - channel disabled by user.",
-        "Notification queued for sending.",
         "Notification read.",
+        "Notification sent.",
         "Notification deleted.",
         "Email sent.",
       ],
+      pending: ["Notification queued for sending."], // here
       failure: [
         "Notification unable to be broadcast.",
         "Email could not be sent.",
@@ -178,27 +179,47 @@ function LogsTable() {
       }
     }
 
-    let badgeColor;
-
     switch (log_status) {
       case "success":
-        badgeColor = "success";
-        break;
-      case "failure":
-        badgeColor = "failure";
-        break;
-      case "warning":
-        badgeColor = "warning";
-        break;
-      default:
-        badgeColor = "Dark"; // Dark badges indicate a conditional statement needed for the status
-    }
+        return (
+          <span className="inline-flex items-center bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded-full dark:bg-green-900 dark:text-green-300">
+            <span className="w-2 h-2 me-1 bg-green-500 rounded-full"></span>
+            Success
+          </span>
+        );
 
-    return (
-      <div className="flex flex-wrap gap-2">
-        <Badge color={badgeColor}>{log_status}</Badge>
-      </div>
-    );
+      case "pending":
+        return (
+          <span className="inline-flex items-center bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded-full dark:bg-blue-900 dark:text-blue-300">
+            <span className="w-2 h-2 me-1 bg-blue-500 rounded-full"></span>
+            Pending
+          </span>
+        );
+
+      case "failure":
+        return (
+          <span className="inline-flex items-center bg-red-100 text-red-800 text-xs font-medium px-2.5 py-0.5 rounded-full dark:bg-red-900 dark:text-red-300">
+            <span className="w-2 h-2 me-1 bg-red-500 rounded-full"></span>
+            Failure
+          </span>
+        );
+
+      case "warning":
+        return (
+          <span className="inline-flex items-center bg-orange-100 text-orange-800 text-xs font-medium px-2.5 py-0.5 rounded-full dark:bg-orange-900 dark:text-orange-300">
+            <span className="w-2 h-2 me-1 bg-orange-500 rounded-full"></span>
+            Warning
+          </span>
+        );
+
+      default:
+        return (
+          <span className="inline-flex items-center bg-pink-100 text-pink-800 text-xs font-medium px-2.5 py-0.5 rounded-full dark:bg-pink-900 dark:text-pink-300">
+            <span className="w-2 h-2 me-1 bg-pink-500 rounded-full"></span>
+            Untracked Status!
+          </span>
+        );
+    }
   }
 
   function getDrawerBadge(log: InAppNotificationLog | EmailNotificationLog) {
@@ -207,6 +228,9 @@ function LogsTable() {
     switch (log.status) {
       case "Notification request received.":
         badgeColor = "pink";
+        break;
+      case "Notification sent.":
+        badgeColor = "success";
         break;
       case "Notification not sent - channel disabled by user.":
         badgeColor = "warning";

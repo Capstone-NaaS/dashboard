@@ -33,9 +33,14 @@ export interface Log {
     | "Notification read."
     | "Notification deleted."
     | "Email sent."
-    | "Notification unable to be broadcast."
-    | "Email could not be sent."
-    | "Notification request received.";
+    | "In-app notification unable to be broadcast."
+    | "Email could not be sent: SES failure."
+    | "Error sending email."
+    | "Notification request received."
+    | "Slack notification sent."
+    | "Slack notification could not be sent"
+    | "Error sending Slack notification."
+    | "Slack notification could not be sent.";
   notification_id: string;
   log_id: string;
   ttl: number;

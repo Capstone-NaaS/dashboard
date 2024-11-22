@@ -1,14 +1,18 @@
-# Telegraph - Dashboard
+# Telegraph - Dashboard Application
 
-Telegraph's dashboard is a centralized location for visualizing your Telegraph implementation and an observability tool. Through the dashboard administrators can inspect notification requests passed to the system, users and their associated preferences managed by the service, and service analytics such as:
+Telegraph's dashboard is a centralized location for visualizing your Telegraph service implementation and an observability tool for monitoring system health.
 
-- Successful and failed notification deliveries
-- Notification deliveries by channel
-- Notification failures by channel
+## Features
 
-Additionally, a Dead Letter Queue page alerts you when messages failed processing and were diverted to the service's dead letter queue.
+- View notifications status and filter notification requests by recipient ID or channel.
+- View users and filter by User ID, Email, or notification preferences.
+- Visualize system activity and performance with charts displaying:
+  - Successful and failed notification deliveries.
+  - Notification deliveries by channel.
+  - Notification failures by channel.
+- Inspect messages which failed processing and were diverted to the service's dead letter queue.
 
-## Install
+## Installation
 
 (insert npm instructions here)
 

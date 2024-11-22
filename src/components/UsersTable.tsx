@@ -201,8 +201,28 @@ function UsersTable() {
   };
 
   return (
-    <div className="overflow-x-auto w-full">
-      <div className="flex flex-wrap gap-4 p-4 border-b">
+    <div className="w-full">
+      <h1
+        style={{
+          color: "#F3F4F5",
+          fontWeight: "800",
+          fontSize: "32px",
+        }}
+        className="transform translate-x-4"
+      >
+        Users
+      </h1>
+      <div className="flex flex-wrap gap-6 p-4 border-b">
+        <div>
+          <h2
+            style={{
+              color: "#F3F4F5",
+              fontWeight: "800",
+            }}
+          >
+            Users Filtering:{" "}
+          </h2>
+        </div>
         <div className="flex flex-col transform translate-y-[-8px]">
           <TextInput
             style={{ background: "#233142", color: "#F3F4F5" }}
@@ -246,9 +266,8 @@ function UsersTable() {
             <Button
               pill
               size="xs"
-              color={COLORS.button}
               as="span"
-              className="cursor-pointer"
+              className="cursor-pointer bg-customPurple"
               onClick={() => {
                 setIdFilter("");
                 setEmailFilter("");

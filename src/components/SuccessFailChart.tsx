@@ -14,6 +14,8 @@ import {
   Legend,
 } from "chart.js";
 
+import { COLORS } from "../utils";
+
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -53,12 +55,12 @@ const SuccessFailChart: React.FC<ChartProps> = ({
       {
         label: "successful",
         data: successData,
-        borderColor: "#388E3C",
+        borderColor: COLORS.on,
       },
       {
         label: "failed",
         data: failedData,
-        borderColor: "#F44336",
+        borderColor: COLORS.off,
       },
     ],
   };

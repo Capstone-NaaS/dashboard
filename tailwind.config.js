@@ -8,7 +8,12 @@ export default {
     flowbite.content(),
   ],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        customPurple: "#8315DB",
+        customPink: "#FF407D",
+      },
+    },
   },
   plugins: [flowbite.plugin()],
 };

@@ -13,7 +13,11 @@ import { FaRegBell } from "react-icons/fa";
 import { MdOutlineEmail } from "react-icons/md";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import formatDate from "../utils/formatDate";
-import { InAppNotificationLog, EmailNotificationLog } from "../types";
+import {
+  InAppNotificationLog,
+  EmailNotificationLog,
+  SlackNotificationLog,
+} from "../types";
 import { COLORS } from "../utils";
 
 const FILTER_STATES = {
@@ -29,13 +33,16 @@ function LogsTable() {
   const initialIdFilter = searchParams.get("userid") || "";
 
   const [logs, setLogs] = useState<
-    (InAppNotificationLog | EmailNotificationLog)[]
+    (InAppNotificationLog | EmailNotificationLog | SlackNotificationLog)[]
   >([]);
   const [filteredLogs, setFilteredLogs] = useState<
-    (InAppNotificationLog | EmailNotificationLog)[]
+    (InAppNotificationLog | EmailNotificationLog | SlackNotificationLog)[]
   >([]);
   const [selectedLog, setSelectedLog] = useState<
-    InAppNotificationLog | EmailNotificationLog | undefined
+    | InAppNotificationLog
+    | EmailNotificationLog
+    | SlackNotificationLog
+    | undefined
   >();
   const [isOpen, setIsOpen] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -44,13 +51,15 @@ function LogsTable() {
   const [emailChannelFilter, setEmailChannelFilter] =
     useState<FilterState>("on");
 
-  const handleOpen = (log: InAppNotificationLog | EmailNotificationLog) => {
+  const handleOpen = (
+    log: InAppNotificationLog | EmailNotificationLog | SlackNotificationLog
+  ) => {
     setSelectedLog(log);
     setIsOpen(true);
   };
 
   const handleClose = () => {
-    setSelectedLog(undefined); // what to do here for removing selected log
+    setSelectedLog(undefined);
     setIsOpen(false);
   };
 
@@ -107,7 +116,7 @@ function LogsTable() {
   }, [logs, idFilter, inAppFilter, emailChannelFilter]);
 
   function sortAndFilterLogs(
-    logs: (InAppNotificationLog | EmailNotificationLog)[]
+    logs: (InAppNotificationLog | EmailNotificationLog | SlackNotificationLog)[]
   ) {
     logs = JSON.parse(JSON.stringify(logs));
 
@@ -150,19 +159,25 @@ function LogsTable() {
     return mostRecent;
   }
 
-  function getBadge(log: InAppNotificationLog | EmailNotificationLog) {
+  function getBadge(
+    log: InAppNotificationLog | EmailNotificationLog | SlackNotificationLog
+  ) {
     const STATUS_STATES = {
       success: [
-        "Notification not sent - channel disabled by user.",
-        "Notification read.",
-        "Notification sent.",
-        "Notification deleted.",
+        "In-app notification not sent - channel disabled by user.",
+        "In-app notification read.",
+        "In-app notification sent.",
+        "In-app notification deleted.",
         "Email sent.",
+        "Slack notification sent.",
       ],
-      pending: ["Notification queued for sending."], // here
+      pending: ["In-app notification queued for sending."],
       failure: [
-        "Notification unable to be broadcast.",
-        "Email could not be sent.",
+        "In-app notification unable to be broadcast.",
+        "Error sending email.",
+        "Email could not be sent: SES failure.",
+        "Slack notification could not be sent.",
+        "Error sending Slack notification.",
       ],
       warning: ["Notification request received."],
     } as const;
@@ -222,37 +237,46 @@ function LogsTable() {
     }
   }
 
-  function getDrawerBadge(log: InAppNotificationLog | EmailNotificationLog) {
+  function getDrawerBadge(
+    log: InAppNotificationLog | EmailNotificationLog | SlackNotificationLog
+  ) {
     let badgeColor;
 
     switch (log.status) {
       case "Notification request received.":
         badgeColor = "pink";
         break;
-      case "Notification sent.":
+
+      case "In-app notification sent.":
+      case "Email sent.":
+      case "Slack notification sent.":
         badgeColor = "success";
         break;
+
       case "Notification not sent - channel disabled by user.":
         badgeColor = "warning";
         break;
-      case "Notification queued for sending.":
+
+      case "In-app notification queued for sending.":
         badgeColor = "info";
         break;
-      case "Notification unable to be broadcast.":
+
+      case "In-app notification unable to be broadcast.":
+      case "Email could not be sent: SES failure.":
+      case "Error sending email.":
+      case "Slack notification could not be sent.":
+      case "Error sending Slack notification.":
         badgeColor = "failure";
         break;
-      case "Notification read.":
+
+      case "In-app notification read.":
         badgeColor = "purple";
         break;
-      case "Notification deleted.":
+
+      case "In-app notification deleted.":
         badgeColor = "indigo";
         break;
-      case "Email sent.":
-        badgeColor = "success";
-        break;
-      case "Email could not be sent.":
-        badgeColor = "failure";
-        break;
+
       default:
         badgeColor = "Dark"; // Dark badges indicate a conditional statement needed for the status
     }

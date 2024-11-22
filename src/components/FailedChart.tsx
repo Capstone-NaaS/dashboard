@@ -1,8 +1,4 @@
-import { getAllSuccessfulLogs } from "../utils/getAllSuccessfulLogs";
-import { getAllFailedLogs } from "../utils/getAllFailedLogs";
-import { ChartProps } from "../types";
 import { Line } from "react-chartjs-2";
-
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -13,6 +9,8 @@ import {
   Tooltip,
   Legend,
 } from "chart.js";
+import { getAllFailedLogs } from "../utils/getAllFailedLogs";
+import { Log, ChartProps } from "../types";
 
 ChartJS.register(
   CategoryScale,
@@ -24,41 +22,54 @@ ChartJS.register(
   Legend
 );
 
-const SuccessFailChart: React.FC<ChartProps> = ({
+const FailedChart: React.FC<ChartProps> = ({
   logs,
   chartLabels,
   parseDates,
   datesObj,
 }) => {
-  // return an array of the counts of successful logs per each date
-  const successCount = () => {
-    let successfulLogs = getAllSuccessfulLogs(logs);
-    let successfulCounts = { ...datesObj };
-    return parseDates(successfulLogs, successfulCounts);
-  };
-  const successData = successCount();
+  const failedLogs = getAllFailedLogs(logs);
 
-  // return an array of the counts of all failed logs per each date
-  const failedCount = () => {
-    let failedLogs = getAllFailedLogs(logs);
+  // filter failed logs based on channels and dates
+  const failEmailCount = () => {
     let failedCounts = { ...datesObj };
-    return parseDates(failedLogs, failedCounts);
+    let emailLogs = failedLogs.filter((log: Log) => log.channel === "email");
+    return parseDates(emailLogs, failedCounts);
   };
-  const failedData = failedCount();
+  const emailData = failEmailCount();
+
+  const failInAppCount = () => {
+    let failedCounts = { ...datesObj };
+    let inappLogs = failedLogs.filter((log: Log) => log.channel === "in_app");
+    return parseDates(inappLogs, failedCounts);
+  };
+  const inappData = failInAppCount();
+
+  const failSlackCount = () => {
+    let failedCounts = { ...datesObj };
+    let slackLogs = failedLogs.filter((log: Log) => log.channel === "slack");
+    return parseDates(slackLogs, failedCounts);
+  };
+  const slackData = failSlackCount();
 
   // data to pass to the Line Chart
   const data = {
     labels: chartLabels.length > 0 ? chartLabels : ["No Data"],
     datasets: [
       {
-        label: "successful",
-        data: successData,
-        borderColor: "#388E3C",
+        label: "in_app",
+        data: inappData,
+        borderColor: "#3F51B5",
       },
       {
-        label: "failed",
-        data: failedData,
-        borderColor: "#F44336",
+        label: "email",
+        data: emailData,
+        borderColor: "#FEBE10",
+      },
+      {
+        label: "slack",
+        data: slackData,
+        borderColor: "#72A0C1",
       },
     ],
   };
@@ -77,21 +88,21 @@ const SuccessFailChart: React.FC<ChartProps> = ({
     plugins: {
       title: {
         display: true,
-        text: "Notification Status",
+        text: "Failed Outgoing Channels",
         font: {
           size: 24,
           family: "'Helvetica Neue', 'Helvetica', 'Arial', sans-serif",
           weight: 400,
           lineHeight: 1.5,
         },
-        color: "#333", // Optionally change the title color
+        color: "#333",
       },
     },
   };
 
   return (
     <div
-      className="SuccessFailChart"
+      className="SuccessfulChart"
       style={{
         border: "1px solid grey", // Box border color and thickness
         padding: "10px", // Space between the content and the border
@@ -104,4 +115,4 @@ const SuccessFailChart: React.FC<ChartProps> = ({
   );
 };
 
-export default SuccessFailChart;
+export default FailedChart;

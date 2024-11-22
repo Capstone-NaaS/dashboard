@@ -26,6 +26,7 @@ export interface Log {
   channel: string;
   user_id: string;
   created_at: string;
+  status: string;
   status:
     | "Notification not sent - channel disabled by user."
     | "Notification queued for sending."
@@ -49,12 +50,36 @@ export interface Log {
 
 export interface InAppNotificationLog extends Log {
   channel: "in_app";
+  status:
+    | "Notification request received."
+    | "In-app notification queued for sending."
+    | "Notification not sent - channel disabled by user."
+    | "In-app notification sent."
+    | "In-app notification read."
+    | "In-app notification deleted."
+    | "In-app notification unable to be broadcast.";
 }
 
 export interface EmailNotificationLog extends Log {
   subject: string;
   receiver_email: string;
   channel: "email";
+  status:
+    | "Notification request received."
+    | "Notification not sent - channel disabled by user."
+    | "Email sent."
+    | "Error sending email."
+    | "Email could not be sent: SES failure.";
+}
+
+export interface SlackNotificationLog extends Log {
+  channel: "slack";
+  status:
+    | "Notification request received."
+    | "Notification not sent - channel disabled by user."
+    | "Slack notification sent."
+    | "Slack notification could not be sent."
+    | "Error sending Slack notification.";
 }
 
 export type DateValues = Record<string, number>;

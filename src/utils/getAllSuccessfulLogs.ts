@@ -4,7 +4,8 @@ export const getAllSuccessfulLogs = (logs: Log[]) => {
   const successDates = logs.filter(
     (log) =>
       log.status === "Email sent." ||
-      log.status === "Notification queued for sending."
+      log.status === "In-app notification sent." ||
+      log.status === "Slack notification sent."
   );
   return successDates;
 };

@@ -22,7 +22,7 @@ ChartJS.register(
   Legend
 );
 
-const FailChannelsChart: React.FC<ChartProps> = ({
+const FailedChart: React.FC<ChartProps> = ({
   logs,
   chartLabels,
   parseDates,
@@ -45,6 +45,13 @@ const FailChannelsChart: React.FC<ChartProps> = ({
   };
   const inappData = failInAppCount();
 
+  const failSlackCount = () => {
+    let failedCounts = { ...datesObj };
+    let slackLogs = failedLogs.filter((log: Log) => log.channel === "slack");
+    return parseDates(slackLogs, failedCounts);
+  };
+  const slackData = failSlackCount();
+
   // data to pass to the Line Chart
   const data = {
     labels: chartLabels.length > 0 ? chartLabels : ["No Data"],
@@ -58,6 +65,11 @@ const FailChannelsChart: React.FC<ChartProps> = ({
         label: "email",
         data: emailData,
         borderColor: "#0000FF",
+      },
+      {
+        label: "slack",
+        data: slackData,
+        borderColor: "#72A0C1",
       },
     ],
   };
@@ -122,7 +134,7 @@ const FailChannelsChart: React.FC<ChartProps> = ({
 
   return (
     <div
-      className="SuccessChannelsChart"
+      className="SuccessfulChart"
       style={{
         border: "1px solid grey", // Box border color and thickness
         padding: "10px", // Space between the content and the border
@@ -135,4 +147,4 @@ const FailChannelsChart: React.FC<ChartProps> = ({
   );
 };
 
-export default FailChannelsChart;
+export default FailedChart;

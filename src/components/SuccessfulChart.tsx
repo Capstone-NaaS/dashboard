@@ -65,17 +65,17 @@ const SuccessfulChart: React.FC<ChartProps> = ({
       {
         label: "in_app",
         data: inappData,
-        borderColor: "#FF1493",
+        borderColor: "#DB5079",
       },
       {
         label: "email",
         data: emailData,
-        borderColor: "#0000FF",
+        borderColor: "#007FFF",
       },
       {
         label: "slack",
         data: slackData,
-        borderColor: "#72A0C1",
+        borderColor: "#F0E68C",
       },
     ],
   };

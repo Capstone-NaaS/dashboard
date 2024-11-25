@@ -27,21 +27,6 @@ export interface Log {
   user_id: string;
   created_at: string;
   status: string;
-  status:
-    | "Notification not sent - channel disabled by user."
-    | "Notification queued for sending."
-    | "In-app notification sent."
-    | "Notification read."
-    | "Notification deleted."
-    | "Email sent."
-    | "In-app notification unable to be broadcast."
-    | "Email could not be sent: SES failure."
-    | "Error sending email."
-    | "Notification request received."
-    | "Slack notification sent."
-    | "Slack notification could not be sent"
-    | "Error sending Slack notification."
-    | "Slack notification could not be sent.";
   notification_id: string;
   log_id: string;
   ttl: number;

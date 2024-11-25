@@ -327,10 +327,7 @@ function LogsTable() {
         })
         .map((log) => {
           return (
-            <Table.Row
-              key={log.log_id}
-              className="hover:underline cursor-pointer"
-            >
+            <Table.Row key={log.log_id}>
               <Table.Cell className="whitespace-nowrap font-medium dark:text-white">
                 {getDrawerBadge(log)}
               </Table.Cell>
@@ -401,7 +398,7 @@ function LogsTable() {
               pill
               size="xs"
               as="span"
-              className="cursor-pointer bg-customP"
+              className="cursor-pointer bg-customPink"
               onClick={() => {
                 setIdFilter("");
                 setInAppFilter(FILTER_STATES.ON);
@@ -526,7 +523,7 @@ function LogsTable() {
                 </div>
               </List.Item>
             </List>
-            <Table hoverable>
+            <Table>
               <Table.Head>
                 <Table.HeadCell className="bg-[#233142]">
                   Notification Status

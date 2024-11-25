@@ -11,7 +11,7 @@ export default {
     extend: {
       colors: {
         customPurple: "#8315DB",
-        customPink: "#FF407D",
+        customPink: "#b814b8",
       },
     },
   },

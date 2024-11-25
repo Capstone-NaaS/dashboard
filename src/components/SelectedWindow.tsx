@@ -23,7 +23,7 @@ function SelectedWindow({
   const location = useLocation();
 
   return (
-    <div className="overflow-x-auto bg-[#233142] flex-grow pt-4 px-5">
+    <div className="overflow-x-auto flex-grow pt-4 px-5">
       {location.pathname.includes("/notification-logs") && <LogsTable />}
       {location.pathname === "/users" && <UsersTable />}
       {location.pathname === "/analytics" && <AnalyticsChart />}

@@ -136,7 +136,7 @@ function DlqTable({
               pill
               size="xs"
               as="span"
-              className="cursor-pointer bg-customPurple"
+              className="cursor-pointer bg-customPink"
               onClick={() => {
                 setUserIdFilter("");
                 setEmailFilter("");

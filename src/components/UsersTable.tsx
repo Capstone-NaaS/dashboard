@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { Table, TextInput, Label, Spinner, Button } from "flowbite-react";
+import { Table, TextInput, Spinner, Button } from "flowbite-react";
 import formatDate from "../utils/formatDate";
 import { User } from "../types/index";
 import { FaRegBell } from "react-icons/fa";

@@ -1,5 +1,5 @@
 import { BrowserRouter as Router } from "react-router-dom";
-import { Flowbite, useThemeMode } from "flowbite-react";
+import { Flowbite } from "flowbite-react";
 import flowbiteTheme from "./themes/flowbiteTheme";
 import Header from "./components/Header";
 import CategorySidebar from "./components/CategorySidebar";

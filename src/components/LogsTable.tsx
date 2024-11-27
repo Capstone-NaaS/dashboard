@@ -3,7 +3,6 @@ import {
   Badge,
   Table,
   TextInput,
-  Label,
   Spinner,
   Button,
   Drawer,

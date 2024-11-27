@@ -1,4 +1,4 @@
-import { Table, TextInput, Label, Spinner, Button } from "flowbite-react";
+import { Table, TextInput, Spinner, Button } from "flowbite-react";
 import { deadLog } from "../types";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";

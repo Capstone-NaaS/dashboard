@@ -440,7 +440,6 @@ function LogsTable() {
                       onClick={() => handleOpen(log)}
                       key={log.log_id}
                       className="hover:bg-[#6B778D] cursor-pointer"
-                      onClick={() => handleOpen(log)}
                     >
                       <Table.Cell className="whitespace-nowrap font-medium dark:text-white">
                         {getBadge(log)}
@@ -469,9 +468,6 @@ function LogsTable() {
                 <Table.Row>
                   <Table.Cell colSpan={5} className="text-center p-4">
                     No notification logs to display.
-                  </Table.Cell>
-                  <Table.Cell onClick={() => handleOpen(log)}>
-                    <p className="font-medium hover:underline">Log Details</p>
                   </Table.Cell>
                 </Table.Row>
               )}

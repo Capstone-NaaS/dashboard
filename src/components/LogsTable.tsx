@@ -483,10 +483,9 @@ function LogsTable() {
           position="right"
         >
           <Drawer.Header
-            title={
-              <span className="text-white text-xl">Notification Logs:</span> // Custom styling for title
-            }
-            titleIcon={() => <></>}
+            titleIcon={() => (
+              <span className="text-white text-xl">Notification Logs:</span>
+            )}
           />
           <Drawer.Items>
             <List

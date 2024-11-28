@@ -4,9 +4,8 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { Table, TextInput, Spinner, Button } from "flowbite-react";
 import formatDate from "../utils/formatDate";
 import { User } from "../types/index";
-import { FaRegBell, FaSlack } from "react-icons/fa";
+import { FaRegBell, FaSlack, FaSortUp, FaSortDown } from "react-icons/fa";
 import { MdOutlineEmail } from "react-icons/md";
-import { FaSortUp, FaSortDown } from "react-icons/fa";
 import { COLORS } from "../utils";
 
 const FILTER_STATES = {

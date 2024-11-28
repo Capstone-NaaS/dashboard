@@ -65,17 +65,17 @@ const SuccessfulChart: React.FC<ChartProps> = ({
       {
         label: "in_app",
         data: inappData,
-        borderColor: "#3F51B5",
+        borderColor: "#DB5079",
       },
       {
         label: "email",
         data: emailData,
-        borderColor: "#FEBE10",
+        borderColor: "#007FFF",
       },
       {
         label: "slack",
         data: slackData,
-        borderColor: "#72A0C1",
+        borderColor: "#F0E68C",
       },
     ],
   };
@@ -84,8 +84,22 @@ const SuccessfulChart: React.FC<ChartProps> = ({
   const options = {
     responsive: true,
     scales: {
-      y: {
+      x: {
+        grid: {
+          color: "#263859",
+          // borderColor: "#DCDCDC",
+        },
         ticks: {
+          color: "#778899",
+        },
+      },
+      y: {
+        grid: {
+          color: "#263859",
+          // borderColor: "#778899",
+        },
+        ticks: {
+          color: "#778899",
           stepSize: 1,
         },
         min: 0,
@@ -101,8 +115,26 @@ const SuccessfulChart: React.FC<ChartProps> = ({
           weight: 400,
           lineHeight: 1.5,
         },
-        color: "#333",
+        color: "#F3F4F6", // Optionally change the title color
       },
+      legend: {
+        labels: {
+          color: "#778899",
+        },
+      },
+    },
+    elements: {
+      line: {
+        borderWidth: 2,
+        tension: 0,
+      },
+      point: {
+        radius: 2,
+        hoverRadius: 10,
+      },
+    },
+    animation: {
+      duration: 1000,
     },
   };
 

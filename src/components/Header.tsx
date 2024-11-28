@@ -4,27 +4,14 @@ import { Navbar } from "flowbite-react";
 
 function Header() {
   return (
-    <Navbar fluid rounded>
-      <Navbar.Brand href="https://flowbite-react.com">
+    <Navbar fluid rounded className="h-24">
+      <Navbar.Brand className="flex justify-start">
         <img
-          src="./public/favicon.ico"
-          className="mr-3 h-20 sm:h-16"
+          src="./public/white_horizontal_transparent.png"
+          className="h-20 tranform translate-y-4 translate-x-4"
           alt="Telegraph Logo"
         />
-        <span className="self-center whitespace-nowrap text-xl font-semibold dark:text-white">
-          Telegraph
-        </span>
       </Navbar.Brand>
-      <Navbar.Toggle />
-      <Navbar.Collapse>
-        <Navbar.Link href="#" active>
-          Home
-        </Navbar.Link>
-        <Navbar.Link href="#">About</Navbar.Link>
-        <Navbar.Link href="#">Services</Navbar.Link>
-        <Navbar.Link href="#">Pricing</Navbar.Link>
-        <Navbar.Link href="#">Contact</Navbar.Link>
-      </Navbar.Collapse>
     </Navbar>
   );
 }

@@ -14,6 +14,8 @@ import {
   Legend,
 } from "chart.js";
 
+import { COLORS } from "../utils";
+
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -53,22 +55,35 @@ const NotificationStatus: React.FC<ChartProps> = ({
       {
         label: "successful",
         data: successData,
-        borderColor: "#388E3C",
+        borderColor: COLORS.on,
       },
       {
         label: "failed",
         data: failedData,
-        borderColor: "#F44336",
+        borderColor: COLORS.off,
       },
     ],
   };
 
-  // Chart options
   const options = {
     responsive: true,
     scales: {
-      y: {
+      x: {
+        grid: {
+          color: "#263859",
+          // borderColor: "#DCDCDC",
+        },
         ticks: {
+          color: "#778899",
+        },
+      },
+      y: {
+        grid: {
+          color: "#263859",
+          // borderColor: "#778899",
+        },
+        ticks: {
+          color: "#778899",
           stepSize: 1,
         },
         min: 0,
@@ -84,8 +99,26 @@ const NotificationStatus: React.FC<ChartProps> = ({
           weight: 400,
           lineHeight: 1.5,
         },
-        color: "#333", // Optionally change the title color
+        color: "#F3F4F6", // Optionally change the title color
       },
+      legend: {
+        labels: {
+          color: "#778899",
+        },
+      },
+    },
+    elements: {
+      line: {
+        borderWidth: 2,
+        tension: 0,
+      },
+      point: {
+        radius: 2,
+        hoverRadius: 10,
+      },
+    },
+    animation: {
+      duration: 1000,
     },
   };
 

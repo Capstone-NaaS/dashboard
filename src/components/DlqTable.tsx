@@ -1,4 +1,4 @@
-import { Table, TextInput, Label, Spinner, Button } from "flowbite-react";
+import { Table, TextInput, Spinner, Button } from "flowbite-react";
 import { deadLog } from "../types";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -74,20 +74,40 @@ function DlqTable({
   };
 
   return (
-    <div className="overflow-x-auto w-full">
-      <div className="flex flex-wrap gap-4 p-4 border-b">
-        <div className="flex flex-col">
-          <Label htmlFor="userIdFilter">Filter by Recipient ID</Label>
+    <div className="w-full">
+      <h1
+        style={{
+          color: "#F3F4F5",
+          fontWeight: "800",
+          fontSize: "32px",
+        }}
+        className="transform translate-x-4"
+      >
+        Dead Letter Queue Logs
+      </h1>
+      <div className="flex flex-wrap gap-6 p-4 border-b">
+        <div>
+          <h2
+            style={{
+              color: "#F3F4F5",
+              fontWeight: "800",
+            }}
+          >
+            Filters:{" "}
+          </h2>
+        </div>
+        <div className="flex flex-col transform translate-y-[-8px]">
           <TextInput
+            style={{ background: "#233142", color: "#F3F4F5" }}
             id="userIdFilter"
             placeholder="Enter recipient ID"
             value={userIdFilter}
             onChange={(e) => setUserIdFilter(e.target.value)}
           />
         </div>
-        <div className="flex flex-col">
-          <Label htmlFor="emailFilter">Filter by Receiver Email</Label>
+        <div className="flex flex-col transform translate-y-[-8px]">
           <TextInput
+            style={{ background: "#233142", color: "#F3F4F5" }}
             id="emailFilter"
             placeholder="Enter receiver email"
             value={emailFilter}
@@ -95,7 +115,6 @@ function DlqTable({
           />
         </div>
         <div className="flex flex-col">
-          <Label className="mb-2">Filter by Channel</Label>
           <div className="flex space-x-2">
             <FaRegBell
               color={COLORS[inAppFilter]}
@@ -112,14 +131,12 @@ function DlqTable({
           </div>
         </div>
         <div className="flex flex-col">
-          <Label className="mb-2">Remove Filters</Label>
-          <div className="flex space-x-2">
+          <div className="flex space-x-2 translate-y-[-3px]">
             <Button
               pill
               size="xs"
-              color={COLORS.button}
               as="span"
-              className="cursor-pointer"
+              className="cursor-pointer bg-customPink"
               onClick={() => {
                 setUserIdFilter("");
                 setEmailFilter("");
@@ -140,19 +157,23 @@ function DlqTable({
       ) : (
         <Table hoverable>
           <Table.Head>
-            <Table.HeadCell>Log ID</Table.HeadCell>
-            <Table.HeadCell>Recipient ID</Table.HeadCell>
-            <Table.HeadCell>Channel</Table.HeadCell>
-            <Table.HeadCell>Message</Table.HeadCell>
-            <Table.HeadCell>Subject</Table.HeadCell>
-            <Table.HeadCell>Receiver Email</Table.HeadCell>
+            <Table.HeadCell className="bg-[#233142]">Log ID</Table.HeadCell>
+            <Table.HeadCell className="bg-[#233142]">
+              Recipient ID
+            </Table.HeadCell>
+            <Table.HeadCell className="bg-[#233142]">Channel</Table.HeadCell>
+            <Table.HeadCell className="bg-[#233142]">Message</Table.HeadCell>
+            <Table.HeadCell className="bg-[#233142]">Subject</Table.HeadCell>
+            <Table.HeadCell className="bg-[#233142]">
+              Receiver Email
+            </Table.HeadCell>
           </Table.Head>
           <Table.Body className="divide-y">
             {filteredLogs.length > 0 ? (
               filteredLogs.map((log) => (
                 <Table.Row
                   key={log.notification_id}
-                  className="bg-white dark:border-gray-700 dark:bg-gray-800"
+                  className="dark:border-gray-700 dark:bg-gray-800 hover:bg-[#6B778D]"
                 >
                   <Table.Cell>{log.notification_id}</Table.Cell>
                   <Table.Cell>

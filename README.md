@@ -20,7 +20,7 @@ The dashboard is a centralized location for visualizing your Telegraph service i
 
 ### Running the Dashboard
 
-The dashboard is intened to be run on localhost by a trusted entity. To initialize the dashboard server run the following command from the installed directory:
+The dashboard is intended to be run on localhost by a trusted entity. To initialize the dashboard server run the following command from the installed directory:
 
 <!-- TO DO: add npm install instructions -->
 

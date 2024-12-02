@@ -1,6 +1,6 @@
-import SuccessFailChart from "./SuccessFailChart";
-import SuccessChannelsChart from "./SuccessChannelsChart";
-import FailChannelsChart from "./FailChannelChart";
+import NotificationStatus from "./NotificationStatusChart";
+import SuccessfulChart from "./SuccessfulChart";
+import FailedChart from "./FailedChart";
 import { useState, useEffect } from "react";
 import { Log, DateValues } from "../types";
 
@@ -107,19 +107,19 @@ const AnalyticsChart = () => {
         margin: "auto",
       }}
     >
-      <SuccessFailChart
+      <NotificationStatus
         logs={logs}
         chartLabels={chartLabels}
         parseDates={parseDates}
         datesObj={datesObj}
       />
-      <SuccessChannelsChart
+      <SuccessfulChart
         logs={logs}
         chartLabels={chartLabels}
         parseDates={parseDates}
         datesObj={datesObj}
       />
-      <FailChannelsChart
+      <FailedChart
         logs={logs}
         chartLabels={chartLabels}
         parseDates={parseDates}

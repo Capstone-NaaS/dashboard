@@ -3,17 +3,20 @@ import {
   Badge,
   Table,
   TextInput,
-  Label,
   Spinner,
   Button,
   Drawer,
   List,
 } from "flowbite-react";
-import { FaRegBell } from "react-icons/fa";
+import { FaRegBell, FaSlack } from "react-icons/fa";
 import { MdOutlineEmail } from "react-icons/md";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import formatDate from "../utils/formatDate";
-import { InAppNotificationLog, EmailNotificationLog } from "../types";
+import {
+  InAppNotificationLog,
+  EmailNotificationLog,
+  SlackNotificationLog,
+} from "../types";
 import { COLORS } from "../utils";
 
 const FILTER_STATES = {
@@ -29,13 +32,16 @@ function LogsTable() {
   const initialIdFilter = searchParams.get("userid") || "";
 
   const [logs, setLogs] = useState<
-    (InAppNotificationLog | EmailNotificationLog)[]
+    (InAppNotificationLog | EmailNotificationLog | SlackNotificationLog)[]
   >([]);
   const [filteredLogs, setFilteredLogs] = useState<
-    (InAppNotificationLog | EmailNotificationLog)[]
+    (InAppNotificationLog | EmailNotificationLog | SlackNotificationLog)[]
   >([]);
   const [selectedLog, setSelectedLog] = useState<
-    InAppNotificationLog | EmailNotificationLog | undefined
+    | InAppNotificationLog
+    | EmailNotificationLog
+    | SlackNotificationLog
+    | undefined
   >();
   const [isOpen, setIsOpen] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -43,14 +49,17 @@ function LogsTable() {
   const [inAppFilter, setInAppFilter] = useState<FilterState>("on");
   const [emailChannelFilter, setEmailChannelFilter] =
     useState<FilterState>("on");
+  const [slackFilter, setSlackFilter] = useState<FilterState>("on");
 
-  const handleOpen = (log: InAppNotificationLog | EmailNotificationLog) => {
+  const handleOpen = (
+    log: InAppNotificationLog | EmailNotificationLog | SlackNotificationLog
+  ) => {
     setSelectedLog(log);
     setIsOpen(true);
   };
 
   const handleClose = () => {
-    setSelectedLog(undefined); // what to do here for removing selected log
+    setSelectedLog(undefined);
     setIsOpen(false);
   };
 
@@ -96,7 +105,8 @@ function LogsTable() {
           const matchesChannel =
             (inAppFilter === FILTER_STATES.ON && log.channel === "in_app") ||
             (emailChannelFilter === FILTER_STATES.ON &&
-              log.channel === "email");
+              log.channel === "email") ||
+            (slackFilter === FILTER_STATES.ON && log.channel === "slack");
 
           return matchesId && matchesChannel;
         })
@@ -104,10 +114,10 @@ function LogsTable() {
     };
 
     applyFilters();
-  }, [logs, idFilter, inAppFilter, emailChannelFilter]);
+  }, [logs, idFilter, inAppFilter, emailChannelFilter, slackFilter]);
 
   function sortAndFilterLogs(
-    logs: (InAppNotificationLog | EmailNotificationLog)[]
+    logs: (InAppNotificationLog | EmailNotificationLog | SlackNotificationLog)[]
   ) {
     logs = JSON.parse(JSON.stringify(logs));
 
@@ -150,19 +160,25 @@ function LogsTable() {
     return mostRecent;
   }
 
-  function getBadge(log: InAppNotificationLog | EmailNotificationLog) {
+  function getBadge(
+    log: InAppNotificationLog | EmailNotificationLog | SlackNotificationLog
+  ) {
     const STATUS_STATES = {
       success: [
-        "Notification not sent - channel disabled by user.",
-        "Notification read.",
-        "Notification sent.",
-        "Notification deleted.",
+        "In-app notification not sent - channel disabled by user.",
+        "In-app notification read.",
+        "In-app notification sent.",
+        "In-app notification deleted.",
         "Email sent.",
+        "Slack notification sent.",
       ],
-      pending: ["Notification queued for sending."], // here
+      pending: ["In-app notification queued for sending."],
       failure: [
-        "Notification unable to be broadcast.",
-        "Email could not be sent.",
+        "In-app notification unable to be broadcast.",
+        "Error sending email.",
+        "Email could not be sent: SES failure.",
+        "Slack notification could not be sent.",
+        "Error sending Slack notification.",
       ],
       warning: ["Notification request received."],
     } as const;
@@ -222,37 +238,46 @@ function LogsTable() {
     }
   }
 
-  function getDrawerBadge(log: InAppNotificationLog | EmailNotificationLog) {
+  function getDrawerBadge(
+    log: InAppNotificationLog | EmailNotificationLog | SlackNotificationLog
+  ) {
     let badgeColor;
 
     switch (log.status) {
       case "Notification request received.":
         badgeColor = "pink";
         break;
-      case "Notification sent.":
+
+      case "In-app notification sent.":
+      case "Email sent.":
+      case "Slack notification sent.":
         badgeColor = "success";
         break;
+
       case "Notification not sent - channel disabled by user.":
         badgeColor = "warning";
         break;
-      case "Notification queued for sending.":
+
+      case "In-app notification queued for sending.":
         badgeColor = "info";
         break;
-      case "Notification unable to be broadcast.":
+
+      case "In-app notification unable to be broadcast.":
+      case "Email could not be sent: SES failure.":
+      case "Error sending email.":
+      case "Slack notification could not be sent.":
+      case "Error sending Slack notification.":
         badgeColor = "failure";
         break;
-      case "Notification read.":
+
+      case "In-app notification read.":
         badgeColor = "purple";
         break;
-      case "Notification deleted.":
+
+      case "In-app notification deleted.":
         badgeColor = "indigo";
         break;
-      case "Email sent.":
-        badgeColor = "success";
-        break;
-      case "Email could not be sent.":
-        badgeColor = "failure";
-        break;
+
       default:
         badgeColor = "Dark"; // Dark badges indicate a conditional statement needed for the status
     }
@@ -281,7 +306,7 @@ function LogsTable() {
 
     return subLogs.length === 0 ? (
       <Table.Row>
-        <Table.Cell colSpan={5} className="text-center p-4 text-gray-500">
+        <Table.Cell colSpan={5} className="text-center p-4">
           No associated notification logs to display.
         </Table.Cell>
       </Table.Row>
@@ -303,11 +328,8 @@ function LogsTable() {
         })
         .map((log) => {
           return (
-            <Table.Row
-              key={log.log_id}
-              className="bg-white dark:border-gray-700 dark:bg-gray-800"
-            >
-              <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+            <Table.Row key={log.log_id}>
+              <Table.Cell className="whitespace-nowrap font-medium dark:text-white">
                 {getDrawerBadge(log)}
               </Table.Cell>
               <Table.Cell>{formatDate(log.created_at)}</Table.Cell>
@@ -320,11 +342,33 @@ function LogsTable() {
   const tableData = sortAndFilterLogs(filteredLogs);
 
   return (
-    <div className="overflow-x-auto w-full">
-      <div className="flex flex-wrap gap-4 p-4 border-b">
-        <div className="flex flex-col">
-          <Label htmlFor="idFilter">Filter by Recipient ID</Label>
+    <div className="w-full">
+      <div>
+        <h1
+          style={{
+            color: "#F3F4F5",
+            fontWeight: "800",
+            fontSize: "32px",
+          }}
+          className="transform translate-x-4"
+        >
+          Notification Logs
+        </h1>
+      </div>
+      <div className="flex flex-wrap gap-6 p-4 border-b">
+        <div>
+          <h2
+            style={{
+              color: "#F3F4F5",
+              fontWeight: "800",
+            }}
+          >
+            Filters:{" "}
+          </h2>
+        </div>
+        <div className="flex flex-col transform translate-y-[-8px]">
           <TextInput
+            style={{ background: "#233142", color: "#F3F4F5" }}
             id="idFilter"
             placeholder="Enter recipient ID"
             value={idFilter}
@@ -334,35 +378,39 @@ function LogsTable() {
           />
         </div>
         <div className="flex flex-col">
-          <Label className="mb-2">Filter by Channel</Label>
-          <div className="flex space-x-2">
+          <div className="flex space-x-4">
             <FaRegBell
               color={COLORS[inAppFilter]}
               size={24}
               onClick={() => handleToggle(setInAppFilter)}
-              className={"cursor-pointer"}
+              className="cursor-pointer"
             />
             <MdOutlineEmail
               color={COLORS[emailChannelFilter]}
               size={24}
               onClick={() => handleToggle(setEmailChannelFilter)}
-              className={"cursor-pointer"}
+              className="cursor-pointer"
+            />
+            <FaSlack
+              color={COLORS[slackFilter]}
+              size={24}
+              onClick={() => handleToggle(setSlackFilter)}
+              className="cursor-pointer"
             />
           </div>
         </div>
         <div className="flex flex-col">
-          <Label className="mb-2">Remove Filters</Label>
-          <div className="flex space-x-2">
+          <div className="flex space-x-2 tranform translate-y-[-3px]">
             <Button
               pill
               size="xs"
-              color={COLORS.button}
               as="span"
-              className="cursor-pointer"
+              className="cursor-pointer bg-customPink"
               onClick={() => {
                 setIdFilter("");
                 setInAppFilter(FILTER_STATES.ON);
                 setEmailChannelFilter(FILTER_STATES.ON);
+                setSlackFilter(FILTER_STATES.ON);
               }}
             >
               Reset
@@ -370,90 +418,102 @@ function LogsTable() {
           </div>
         </div>
       </div>
-
-      {loading ? (
-        <div className="flex justify-center items-center p-8">
-          <Spinner aria-label="Loading" size="xl" className="text-gray-500" />
-          <span className="ml-3 text-gray-500">
-            Loading notification logs...
-          </span>
-        </div>
-      ) : (
-        <Table hoverable>
-          <Table.Head>
-            <Table.HeadCell>Telegraph Status</Table.HeadCell>
-            <Table.HeadCell>Recipient ID</Table.HeadCell>
-            <Table.HeadCell>Channel</Table.HeadCell>
-            <Table.HeadCell>Notification Status</Table.HeadCell>
-            <Table.HeadCell>Date</Table.HeadCell>
-          </Table.Head>
-          <Table.Body className="divide-y">
-            {tableData.length > 0 ? (
-              tableData.map((log) => {
-                return (
-                  <Table.Row
-                    onClick={() => handleOpen(log)}
-                    key={log.log_id}
-                    className="bg-white dark:border-gray-700 dark:bg-gray-800"
-                  >
-                    <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
-                      {getBadge(log)}
-                    </Table.Cell>
-                    <Table.Cell>
-                      <span
-                        className="hover:text-blue-600 hover:underline cursor-pointer"
-                        onClick={() => navigate(`/users?id=${log.user_id}`)}
-                      >
-                        {log.user_id}
-                      </span>
-                    </Table.Cell>
-                    <Table.Cell>
-                      {log.channel === "in_app" ? (
-                        <FaRegBell size={16} />
-                      ) : (
-                        <MdOutlineEmail size={16} />
-                      )}
-                    </Table.Cell>
-                    <Table.Cell>{log.status}</Table.Cell>
-                    <Table.Cell>{formatDate(log.created_at)}</Table.Cell>
-                  </Table.Row>
-                );
-              })
-            ) : (
-              <Table.Row>
-                <Table.Cell
-                  colSpan={5}
-                  className="text-center p-4 text-gray-500"
-                >
-                  No notification logs to display.
-                </Table.Cell>
-              </Table.Row>
-            )}
-          </Table.Body>
-        </Table>
-      )}
+      <div className="overflow-y-auto max-h-[calc(90vh-200px)]">
+        {loading ? (
+          <div className="flex justify-center items-center p-8">
+            <Spinner aria-label="Loading" size="xl" className="text-gray-500" />
+            <span className="ml-3 text-gray-500">
+              Loading notification logs...
+            </span>
+          </div>
+        ) : (
+          <Table hoverable>
+            <Table.Head>
+              <Table.HeadCell className="bg-[#233142]">
+                Telegraph Status
+              </Table.HeadCell>
+              <Table.HeadCell className="bg-[#233142]">
+                Recipient ID
+              </Table.HeadCell>
+              <Table.HeadCell className="bg-[#233142]">Channel</Table.HeadCell>
+              <Table.HeadCell className="bg-[#233142]">
+                Notification Status
+              </Table.HeadCell>
+              <Table.HeadCell className="bg-[#233142]">Date</Table.HeadCell>
+            </Table.Head>
+            <Table.Body className="divide-y">
+              {tableData.length > 0 ? (
+                tableData.map((log) => {
+                  return (
+                    <Table.Row
+                      onClick={() => handleOpen(log)}
+                      key={log.log_id}
+                      className="hover:bg-[#6B778D] cursor-pointer"
+                    >
+                      <Table.Cell className="whitespace-nowrap font-medium dark:text-white">
+                        {getBadge(log)}
+                      </Table.Cell>
+                      <Table.Cell>
+                        <span
+                          className=" hover:underline cursor-pointer"
+                          onClick={() => navigate(`/users?id=${log.user_id}`)}
+                        >
+                          {log.user_id}
+                        </span>
+                      </Table.Cell>
+                      <Table.Cell>
+                        {log.channel === "in_app" ? (
+                          <FaRegBell size={16} />
+                        ) : log.channel === "email" ? (
+                          <MdOutlineEmail size={16} />
+                        ) : (
+                          <FaSlack size={16} />
+                        )}
+                      </Table.Cell>
+                      <Table.Cell>{log.status}</Table.Cell>
+                      <Table.Cell>{formatDate(log.created_at)}</Table.Cell>
+                    </Table.Row>
+                  );
+                })
+              ) : (
+                <Table.Row>
+                  <Table.Cell colSpan={5} className="text-center p-4">
+                    No notification logs to display.
+                  </Table.Cell>
+                </Table.Row>
+              )}
+            </Table.Body>
+          </Table>
+        )}
+      </div>
       {selectedLog ? (
         <Drawer
-          className="w-3/4"
+          className="w-2/3 custom-slide-in  bg-[#233142]"
           open={isOpen}
           onClose={() => handleClose()}
           position="right"
         >
-          <Drawer.Header title={"Notification Logs:"} titleIcon={() => <></>} />
+          <Drawer.Header
+            titleIcon={() => (
+              <span className="text-white text-xl">Notification Logs:</span>
+            )}
+          />
           <Drawer.Items>
             <List
               unstyled
-              className="max-w-md divide-y divide-gray-200 dark:divide-gray-700"
+              className="max-w-md divide-y divide-gray-200 dark:divide-gray-700 text-white"
             >
               <List.Item className="pb-3 sm:pb-4">
                 <div className="flex items-center space-x-4 rtl:space-x-reverse">
                   {selectedLog.channel === "in_app" ? (
                     <FaRegBell size={16} />
-                  ) : (
+                  ) : selectedLog.channel === "email" ? (
                     <MdOutlineEmail size={16} />
+                  ) : (
+                    <FaSlack size={16} />
                   )}
                   <div className="min-w-0 flex-1">
-                    <p className="truncate text-sm font-medium text-gray-900 dark:text-white">
+                    <p className="truncate text-sm font-medium text-white dark:text-white">
                       <span
                         className="hover:text-blue-600 hover:underline cursor-pointer"
                         onClick={() =>
@@ -463,17 +523,19 @@ function LogsTable() {
                         {selectedLog.user_id}
                       </span>
                     </p>
-                    <p className="truncate text-sm text-gray-500 dark:text-gray-400">
+                    <p className="truncate text-sm text-white dark:text-gray-400">
                       Message: {selectedLog.message}
                     </p>
                   </div>
                 </div>
               </List.Item>
             </List>
-            <Table hoverable>
+            <Table>
               <Table.Head>
-                <Table.HeadCell>Notification Status</Table.HeadCell>
-                <Table.HeadCell>Date</Table.HeadCell>
+                <Table.HeadCell className="bg-[#233142]">
+                  Notification Status
+                </Table.HeadCell>
+                <Table.HeadCell className="bg-[#233142]">Date</Table.HeadCell>
               </Table.Head>
               <Table.Body className="divide-y">{filterDrawer()}</Table.Body>
             </Table>

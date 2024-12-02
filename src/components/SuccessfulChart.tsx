@@ -22,7 +22,7 @@ ChartJS.register(
   Legend
 );
 
-const SuccessChannelsChart: React.FC<ChartProps> = ({
+const SuccessfulChart: React.FC<ChartProps> = ({
   logs,
   chartLabels,
   parseDates,
@@ -49,6 +49,15 @@ const SuccessChannelsChart: React.FC<ChartProps> = ({
   };
   const inappData = successInAppCount();
 
+  const successSlackCount = () => {
+    let successfulCounts = { ...datesObj };
+    let slackLogs = successfulLogs.filter(
+      (log: Log) => log.channel === "slack"
+    );
+    return parseDates(slackLogs, successfulCounts);
+  };
+  const slackData = successSlackCount();
+
   // data to pass to the Line Chart
   const data = {
     labels: chartLabels.length > 0 ? chartLabels : ["No Data"],
@@ -56,12 +65,17 @@ const SuccessChannelsChart: React.FC<ChartProps> = ({
       {
         label: "in_app",
         data: inappData,
-        borderColor: "#3F51B5",
+        borderColor: "#DB5079",
       },
       {
         label: "email",
         data: emailData,
-        borderColor: "#FEBE10",
+        borderColor: "#007FFF",
+      },
+      {
+        label: "slack",
+        data: slackData,
+        borderColor: "#F0E68C",
       },
     ],
   };
@@ -70,8 +84,22 @@ const SuccessChannelsChart: React.FC<ChartProps> = ({
   const options = {
     responsive: true,
     scales: {
-      y: {
+      x: {
+        grid: {
+          color: "#263859",
+          // borderColor: "#DCDCDC",
+        },
         ticks: {
+          color: "#778899",
+        },
+      },
+      y: {
+        grid: {
+          color: "#263859",
+          // borderColor: "#778899",
+        },
+        ticks: {
+          color: "#778899",
           stepSize: 1,
         },
         min: 0,
@@ -87,14 +115,32 @@ const SuccessChannelsChart: React.FC<ChartProps> = ({
           weight: 400,
           lineHeight: 1.5,
         },
-        color: "#333",
+        color: "#F3F4F6", // Optionally change the title color
       },
+      legend: {
+        labels: {
+          color: "#778899",
+        },
+      },
+    },
+    elements: {
+      line: {
+        borderWidth: 2,
+        tension: 0,
+      },
+      point: {
+        radius: 2,
+        hoverRadius: 10,
+      },
+    },
+    animation: {
+      duration: 1000,
     },
   };
 
   return (
     <div
-      className="SuccessChannelsChart"
+      className="SuccessfulChart"
       style={{
         border: "1px solid grey", // Box border color and thickness
         padding: "10px", // Space between the content and the border
@@ -107,4 +153,4 @@ const SuccessChannelsChart: React.FC<ChartProps> = ({
   );
 };
 
-export default SuccessChannelsChart;
+export default SuccessfulChart;

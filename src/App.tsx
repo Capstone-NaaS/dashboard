@@ -1,4 +1,6 @@
 import { BrowserRouter as Router } from "react-router-dom";
+import { Flowbite } from "flowbite-react";
+import flowbiteTheme from "./themes/flowbiteTheme";
 import Header from "./components/Header";
 import CategorySidebar from "./components/CategorySidebar";
 import SelectedWindow from "./components/SelectedWindow";
@@ -24,19 +26,21 @@ function App() {
 
   return (
     <Router>
-      <Header />
-      <main className="flex h-[calc(100vh-6rem)]">
-        <div className="w-1/5">
-          <CategorySidebar hasDlq={deadLogs.length > 0} />
-        </div>
-        <SelectedWindow
-          deadLogs={deadLogs}
-          setDeadLogs={setDeadLogs}
-          loadingDLQ={loadingDLQ}
-          setLoadingDLQ={setLoadingDLQ}
-          fetchInProgressRef={fetchInProgressRef}
-        />
-      </main>
+      <Flowbite theme={{ theme: flowbiteTheme }}>
+        <Header />
+        <main className="flex h-[calc(100vh-6rem)]">
+          <div>
+            <CategorySidebar hasDlq={deadLogs.length > 0} />
+          </div>
+          <SelectedWindow
+            deadLogs={deadLogs}
+            setDeadLogs={setDeadLogs}
+            loadingDLQ={loadingDLQ}
+            setLoadingDLQ={setLoadingDLQ}
+            fetchInProgressRef={fetchInProgressRef}
+          />
+        </main>
+      </Flowbite>
     </Router>
   );
 }

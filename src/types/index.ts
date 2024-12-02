@@ -8,6 +8,7 @@ export interface User {
   preferences: {
     email: boolean;
     in_app: boolean;
+    slack: boolean;
   };
 }
 

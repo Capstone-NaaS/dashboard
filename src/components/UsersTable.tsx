@@ -4,9 +4,8 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { Table, TextInput, Spinner, Button } from "flowbite-react";
 import formatDate from "../utils/formatDate";
 import { User } from "../types/index";
-import { FaRegBell } from "react-icons/fa";
+import { FaRegBell, FaSlack, FaSortUp, FaSortDown } from "react-icons/fa";
 import { MdOutlineEmail } from "react-icons/md";
-import { FaSortUp, FaSortDown } from "react-icons/fa";
 import { COLORS } from "../utils";
 
 const FILTER_STATES = {
@@ -33,6 +32,9 @@ function UsersTable() {
     FILTER_STATES.ALL
   );
   const [emailPrefFilter, setEmailPrefFilter] = useState<FilterState>(
+    FILTER_STATES.ALL
+  );
+  const [slackFilter, setSlackFilter] = useState<FilterState>(
     FILTER_STATES.ALL
   );
   const [sortColumn, setSortColumn] = useState<string | null>(null);
@@ -102,15 +104,24 @@ function UsersTable() {
             (emailPrefFilter === FILTER_STATES.ON && user.preferences.email) ||
             (emailPrefFilter === FILTER_STATES.OFF && !user.preferences.email);
 
+          const matchesSlackPref =
+            slackFilter === FILTER_STATES.ALL ||
+            (slackFilter === FILTER_STATES.ON && user.preferences.slack) ||
+            (slackFilter === FILTER_STATES.OFF && !user.preferences.slack);
+
           return (
-            matchesId && matchesEmail && matchesInAppPref && matchesEmailPref
+            matchesId &&
+            matchesEmail &&
+            matchesInAppPref &&
+            matchesEmailPref &&
+            matchesSlackPref
           );
         })
       );
     };
 
     applyFilters();
-  }, [users, idFilter, emailFilter, inAppFilter, emailPrefFilter]);
+  }, [users, idFilter, emailFilter, inAppFilter, emailPrefFilter, slackFilter]);
 
   const handleSort = (column: "created_at" | "last_seen" | "last_notified") => {
     let newSortOrder: "asc" | "desc" | null;
@@ -170,6 +181,10 @@ function UsersTable() {
             <MdOutlineEmail
               size={24}
               color={user.preferences.email ? COLORS.on : COLORS.off}
+            />
+            <FaSlack
+              size={24}
+              color={user.preferences.slack ? COLORS.on : COLORS.off}
             />
           </div>
         </Table.Cell>
@@ -251,13 +266,19 @@ function UsersTable() {
               color={COLORS[inAppFilter]}
               size={24}
               onClick={() => handleToggle(setInAppFilter)}
-              className={"cursor-pointer"}
+              className="cursor-pointer"
             />
             <MdOutlineEmail
               color={COLORS[emailPrefFilter]}
               size={24}
               onClick={() => handleToggle(setEmailPrefFilter)}
-              className={"cursor-pointer"}
+              className="cursor-pointer"
+            />
+            <FaSlack
+              color={COLORS[slackFilter]}
+              size={24}
+              onClick={() => handleToggle(setSlackFilter)}
+              className="cursor-pointer"
             />
           </div>
         </div>
@@ -273,6 +294,7 @@ function UsersTable() {
                 setEmailFilter("");
                 setInAppFilter(FILTER_STATES.ALL);
                 setEmailPrefFilter(FILTER_STATES.ALL);
+                setSlackFilter(FILTER_STATES.ALL);
               }}
             >
               Reset

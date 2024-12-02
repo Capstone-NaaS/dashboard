@@ -2,7 +2,7 @@ import { Table, TextInput, Spinner, Button } from "flowbite-react";
 import { deadLog } from "../types";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { FaRegBell } from "react-icons/fa";
+import { FaRegBell, FaSlack } from "react-icons/fa";
 import { MdOutlineEmail } from "react-icons/md";
 
 import { fetchDlq, COLORS } from "../utils";
@@ -37,6 +37,7 @@ function DlqTable({
   const [inAppFilter, setInAppFilter] = useState<FilterState>("on");
   const [emailChannelFilter, setEmailChannelFilter] =
     useState<FilterState>("on");
+  const [slackFilter, setSlackFilter] = useState<FilterState>("on");
 
   useEffect(() => {
     fetchInProgressRef.current = true;
@@ -58,12 +59,20 @@ function DlqTable({
         .includes(emailFilter.toLowerCase());
       const matchesChannel =
         (inAppFilter === FILTER_STATES.ON && log.channel === "in_app") ||
-        (emailChannelFilter === FILTER_STATES.ON && log.channel === "email");
+        (emailChannelFilter === FILTER_STATES.ON && log.channel === "email") ||
+        (slackFilter === FILTER_STATES.ON && log.channel === "slack");
 
       return matchesUserId && matchesEmail && matchesChannel;
     });
     setFilteredLogs(newFilteredLogs);
-  }, [deadLogs, userIdFilter, emailFilter, inAppFilter, emailChannelFilter]);
+  }, [
+    deadLogs,
+    userIdFilter,
+    emailFilter,
+    inAppFilter,
+    emailChannelFilter,
+    slackFilter,
+  ]);
 
   const handleToggle = (
     filterSetter: (value: React.SetStateAction<FilterState>) => void
@@ -120,13 +129,19 @@ function DlqTable({
               color={COLORS[inAppFilter]}
               size={24}
               onClick={() => handleToggle(setInAppFilter)}
-              className={"cursor-pointer"}
+              className="cursor-pointer"
             />
             <MdOutlineEmail
               color={COLORS[emailChannelFilter]}
               size={24}
               onClick={() => handleToggle(setEmailChannelFilter)}
-              className={"cursor-pointer"}
+              className="cursor-pointer"
+            />
+            <FaSlack
+              color={COLORS[slackFilter]}
+              size={24}
+              onClick={() => handleToggle(setSlackFilter)}
+              className="cursor-pointer"
             />
           </div>
         </div>
@@ -142,6 +157,7 @@ function DlqTable({
                 setEmailFilter("");
                 setInAppFilter(FILTER_STATES.ON);
                 setEmailChannelFilter(FILTER_STATES.ON);
+                setSlackFilter(FILTER_STATES.ON);
               }}
             >
               Reset
@@ -187,8 +203,10 @@ function DlqTable({
                   <Table.Cell>
                     {log.channel === "in_app" ? (
                       <FaRegBell size={16} />
-                    ) : (
+                    ) : log.channel === "email" ? (
                       <MdOutlineEmail size={16} />
+                    ) : (
+                      <FaSlack size={16} />
                     )}
                   </Table.Cell>
                   <Table.Cell>{log.body.message}</Table.Cell>

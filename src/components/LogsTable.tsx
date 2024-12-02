@@ -8,7 +8,7 @@ import {
   Drawer,
   List,
 } from "flowbite-react";
-import { FaRegBell } from "react-icons/fa";
+import { FaRegBell, FaSlack } from "react-icons/fa";
 import { MdOutlineEmail } from "react-icons/md";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import formatDate from "../utils/formatDate";
@@ -49,6 +49,7 @@ function LogsTable() {
   const [inAppFilter, setInAppFilter] = useState<FilterState>("on");
   const [emailChannelFilter, setEmailChannelFilter] =
     useState<FilterState>("on");
+  const [slackFilter, setSlackFilter] = useState<FilterState>("on");
 
   const handleOpen = (
     log: InAppNotificationLog | EmailNotificationLog | SlackNotificationLog
@@ -104,7 +105,8 @@ function LogsTable() {
           const matchesChannel =
             (inAppFilter === FILTER_STATES.ON && log.channel === "in_app") ||
             (emailChannelFilter === FILTER_STATES.ON &&
-              log.channel === "email");
+              log.channel === "email") ||
+            (slackFilter === FILTER_STATES.ON && log.channel === "slack");
 
           return matchesId && matchesChannel;
         })
@@ -112,7 +114,7 @@ function LogsTable() {
     };
 
     applyFilters();
-  }, [logs, idFilter, inAppFilter, emailChannelFilter]);
+  }, [logs, idFilter, inAppFilter, emailChannelFilter, slackFilter]);
 
   function sortAndFilterLogs(
     logs: (InAppNotificationLog | EmailNotificationLog | SlackNotificationLog)[]
@@ -381,13 +383,19 @@ function LogsTable() {
               color={COLORS[inAppFilter]}
               size={24}
               onClick={() => handleToggle(setInAppFilter)}
-              className={"cursor-pointer"}
+              className="cursor-pointer"
             />
             <MdOutlineEmail
               color={COLORS[emailChannelFilter]}
               size={24}
               onClick={() => handleToggle(setEmailChannelFilter)}
-              className={"cursor-pointer"}
+              className="cursor-pointer"
+            />
+            <FaSlack
+              color={COLORS[slackFilter]}
+              size={24}
+              onClick={() => handleToggle(setSlackFilter)}
+              className="cursor-pointer"
             />
           </div>
         </div>
@@ -402,6 +410,7 @@ function LogsTable() {
                 setIdFilter("");
                 setInAppFilter(FILTER_STATES.ON);
                 setEmailChannelFilter(FILTER_STATES.ON);
+                setSlackFilter(FILTER_STATES.ON);
               }}
             >
               Reset
@@ -455,8 +464,10 @@ function LogsTable() {
                       <Table.Cell>
                         {log.channel === "in_app" ? (
                           <FaRegBell size={16} />
-                        ) : (
+                        ) : log.channel === "email" ? (
                           <MdOutlineEmail size={16} />
+                        ) : (
+                          <FaSlack size={16} />
                         )}
                       </Table.Cell>
                       <Table.Cell>{log.status}</Table.Cell>
@@ -496,8 +507,10 @@ function LogsTable() {
                 <div className="flex items-center space-x-4 rtl:space-x-reverse">
                   {selectedLog.channel === "in_app" ? (
                     <FaRegBell size={16} />
-                  ) : (
+                  ) : selectedLog.channel === "email" ? (
                     <MdOutlineEmail size={16} />
+                  ) : (
+                    <FaSlack size={16} />
                   )}
                   <div className="min-w-0 flex-1">
                     <p className="truncate text-sm font-medium text-white dark:text-white">

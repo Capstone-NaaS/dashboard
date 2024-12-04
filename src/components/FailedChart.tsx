@@ -59,17 +59,23 @@ const FailedChart: React.FC<ChartProps> = ({
       {
         label: "in_app",
         data: inappData,
-        borderColor: "#DB5079",
+        backgroundColor: "#E0A910",
+        borderColor: "#E0A910",
+        tension: 0.5,
       },
       {
         label: "email",
         data: emailData,
-        borderColor: "#007FFF",
+        backgroundColor: "#f8e5a4",
+        borderColor: "#f8e5a4",
+        tension: 0.5,
       },
       {
         label: "slack",
         data: slackData,
-        borderColor: "#F0E68C",
+        backgroundColor: "#FFFFF0",
+        borderColor: "#FFFFF0",
+        tension: 0.5,
       },
     ],
   };
@@ -105,7 +111,7 @@ const FailedChart: React.FC<ChartProps> = ({
         text: "Failed Outgoing Channels",
         font: {
           size: 24,
-          family: "'Helvetica Neue', 'Helvetica', 'Arial', sans-serif",
+          family: "Open Sans",
           weight: 400,
           lineHeight: 1.5,
         },
@@ -113,7 +119,7 @@ const FailedChart: React.FC<ChartProps> = ({
       },
       legend: {
         labels: {
-          color: "#778899",
+          color: "#dadbdc",
         },
       },
     },

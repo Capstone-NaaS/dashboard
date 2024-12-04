@@ -87,7 +87,7 @@ function DlqTable({
       <h1
         style={{
           color: "#F3F4F5",
-          fontWeight: "800",
+          fontWeight: "400",
           fontSize: "32px",
         }}
         className="transform translate-x-4"
@@ -99,7 +99,7 @@ function DlqTable({
           <h2
             style={{
               color: "#F3F4F5",
-              fontWeight: "800",
+              fontWeight: "400",
             }}
           >
             Filters:{" "}
@@ -151,7 +151,7 @@ function DlqTable({
               pill
               size="xs"
               as="span"
-              className="cursor-pointer bg-customPink"
+              className="cursor-pointer bg-customBlue"
               onClick={() => {
                 setUserIdFilter("");
                 setEmailFilter("");

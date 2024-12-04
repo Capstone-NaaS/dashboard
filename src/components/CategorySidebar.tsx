@@ -1,7 +1,11 @@
 import { Sidebar } from "flowbite-react";
-import { HiTable, HiUser } from "react-icons/hi";
-import { FaChartLine } from "react-icons/fa6";
-import { BiSolidSkull } from "react-icons/bi";
+import {
+  BsTable,
+  BsSendExclamation,
+  BsPersonFill,
+  BsGraphUp,
+} from "react-icons/bs";
+
 import { IoWarning } from "react-icons/io5";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
@@ -23,22 +27,22 @@ function CategorySidebar({ hasDlq }: CategorySidebarProps) {
   const CATEGORIES = [
     {
       name: "Notification Logs",
-      icon: HiTable,
+      icon: BsTable,
       path: "notification-logs",
     },
     {
       name: "Users",
-      icon: HiUser,
+      icon: BsPersonFill,
       path: "users",
     },
     {
       name: "Analytics",
-      icon: FaChartLine,
+      icon: BsGraphUp,
       path: "analytics",
     },
     {
       name: "DLQ",
-      icon: BiSolidSkull,
+      icon: BsSendExclamation,
       path: "dlq",
     },
   ];
@@ -93,7 +97,7 @@ function CategorySidebar({ hasDlq }: CategorySidebarProps) {
                 <div className="flex items-center">
                   {category.name}
                   {category.path === "dlq" && hasDlq ? (
-                    <IoWarning size={24} color="red" className="ml-2" />
+                    <IoWarning size={24} color="#E57373" className="ml-2" />
                   ) : null}
                 </div>
               </Sidebar.Item>

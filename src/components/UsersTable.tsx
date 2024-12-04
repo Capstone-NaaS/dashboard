@@ -220,7 +220,7 @@ function UsersTable() {
       <h1
         style={{
           color: "#F3F4F5",
-          fontWeight: "800",
+          fontWeight: "400",
           fontSize: "32px",
         }}
         className="transform translate-x-4"
@@ -232,10 +232,10 @@ function UsersTable() {
           <h2
             style={{
               color: "#F3F4F5",
-              fontWeight: "800",
+              fontWeight: "400",
             }}
           >
-            Users Filtering:{" "}
+            Filter Users:{" "}
           </h2>
         </div>
         <div className="flex flex-col transform translate-y-[-8px]">
@@ -288,7 +288,7 @@ function UsersTable() {
               pill
               size="xs"
               as="span"
-              className="cursor-pointer bg-customPink"
+              className="cursor-pointer bg-customBlue"
               onClick={() => {
                 setIdFilter("");
                 setEmailFilter("");

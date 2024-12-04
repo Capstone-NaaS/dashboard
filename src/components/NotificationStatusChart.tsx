@@ -56,11 +56,15 @@ const NotificationStatus: React.FC<ChartProps> = ({
         label: "successful",
         data: successData,
         borderColor: COLORS.on,
+        backgroundColor: COLORS.on,
+        tension: 0.5,
       },
       {
         label: "failed",
         data: failedData,
         borderColor: COLORS.off,
+        backgroundColor: COLORS.off,
+        tension: 0.5,
       },
     ],
   };
@@ -95,7 +99,7 @@ const NotificationStatus: React.FC<ChartProps> = ({
         text: "Notification Status",
         font: {
           size: 24,
-          family: "'Helvetica Neue', 'Helvetica', 'Arial', sans-serif",
+          family: "Open sans",
           weight: 400,
           lineHeight: 1.5,
         },
@@ -103,7 +107,7 @@ const NotificationStatus: React.FC<ChartProps> = ({
       },
       legend: {
         labels: {
-          color: "#778899",
+          color: "#dadbdc",
         },
       },
     },

@@ -427,7 +427,7 @@ function LogsTable() {
             </span>
           </div>
         ) : (
-          <Table hoverable>
+          <Table>
             <Table.Head>
               <Table.HeadCell className="bg-[#233142]">
                 Telegraph Status

@@ -171,7 +171,7 @@ function DlqTable({
           <span className="ml-3 text-gray-500">Loading logs...</span>
         </div>
       ) : (
-        <Table hoverable>
+        <Table>
           <Table.Head>
             <Table.HeadCell className="bg-[#233142]">Log ID</Table.HeadCell>
             <Table.HeadCell className="bg-[#233142]">

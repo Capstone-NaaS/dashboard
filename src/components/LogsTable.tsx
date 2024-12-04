@@ -476,7 +476,7 @@ function LogsTable() {
                   );
                 })
               ) : (
-                <Table.Row>
+                <Table.Row className="hover:bg-[#233142]">
                   <Table.Cell colSpan={5} className="text-center p-4">
                     No notification logs to display.
                   </Table.Cell>

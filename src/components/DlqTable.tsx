@@ -215,7 +215,7 @@ function DlqTable({
                 </Table.Row>
               ))
             ) : (
-              <Table.Row>
+              <Table.Row className="hover:bg-[#233142]">
                 <Table.Cell
                   colSpan={6}
                   className="text-center p-4 text-gray-500"

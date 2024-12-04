@@ -204,7 +204,7 @@ function UsersTable() {
   const generateRows = (users: User[]) => {
     if (users.length === 0) {
       return (
-        <Table.Row>
+        <Table.Row className="hover:bg-[#233142]">
           <Table.Cell colSpan={6} className="text-center p-4 text-gray-500">
             No users to display.
           </Table.Cell>
@@ -283,7 +283,7 @@ function UsersTable() {
           </div>
         </div>
         <div className="flex flex-col">
-          <div className="flex space-x-2 tranform translate-y-[-3px]">
+          <div className="flex space-x-2 transform translate-y-[-3px]">
             <Button
               pill
               size="xs"

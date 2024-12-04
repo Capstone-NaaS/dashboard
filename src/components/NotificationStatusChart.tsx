@@ -32,7 +32,6 @@ const NotificationStatus: React.FC<ChartProps> = ({
   parseDates,
   datesObj,
 }) => {
-  // return an array of the counts of successful logs per each date
   const successCount = () => {
     let successfulLogs = getAllSuccessfulLogs(logs);
     let successfulCounts = { ...datesObj };
@@ -40,7 +39,6 @@ const NotificationStatus: React.FC<ChartProps> = ({
   };
   const successData = successCount();
 
-  // return an array of the counts of all failed logs per each date
   const failedCount = () => {
     let failedLogs = getAllFailedLogs(logs);
     let failedCounts = { ...datesObj };
@@ -48,7 +46,6 @@ const NotificationStatus: React.FC<ChartProps> = ({
   };
   const failedData = failedCount();
 
-  // data to pass to the Line Chart
   const data = {
     labels: chartLabels.length > 0 ? chartLabels : ["No Data"],
     datasets: [
@@ -75,7 +72,6 @@ const NotificationStatus: React.FC<ChartProps> = ({
       x: {
         grid: {
           color: "#263859",
-          // borderColor: "#DCDCDC",
         },
         ticks: {
           color: "#778899",
@@ -84,7 +80,6 @@ const NotificationStatus: React.FC<ChartProps> = ({
       y: {
         grid: {
           color: "#263859",
-          // borderColor: "#778899",
         },
         ticks: {
           color: "#778899",
@@ -103,7 +98,7 @@ const NotificationStatus: React.FC<ChartProps> = ({
           weight: 400,
           lineHeight: 1.5,
         },
-        color: "#F3F4F6", // Optionally change the title color
+        color: "#F3F4F6",
       },
       legend: {
         labels: {

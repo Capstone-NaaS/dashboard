@@ -30,7 +30,6 @@ const SuccessfulChart: React.FC<ChartProps> = ({
 }) => {
   const successfulLogs = getAllSuccessfulLogs(logs);
 
-  // filter successful logs based on channels and dates
   const successEmailCount = () => {
     let successfulCounts = { ...datesObj };
     let emailLogs = successfulLogs.filter(
@@ -58,7 +57,6 @@ const SuccessfulChart: React.FC<ChartProps> = ({
   };
   const slackData = successSlackCount();
 
-  // data to pass to the Line Chart
   const data = {
     labels: chartLabels.length > 0 ? chartLabels : ["No Data"],
     datasets: [
@@ -86,14 +84,12 @@ const SuccessfulChart: React.FC<ChartProps> = ({
     ],
   };
 
-  // Chart options
   const options = {
     responsive: true,
     scales: {
       x: {
         grid: {
           color: "#263859",
-          // borderColor: "#DCDCDC",
         },
         ticks: {
           color: "#778899",
@@ -102,7 +98,6 @@ const SuccessfulChart: React.FC<ChartProps> = ({
       y: {
         grid: {
           color: "#263859",
-          // borderColor: "#778899",
         },
         ticks: {
           color: "#778899",
@@ -121,7 +116,7 @@ const SuccessfulChart: React.FC<ChartProps> = ({
           weight: 400,
           lineHeight: 1.5,
         },
-        color: "#F3F4F6", // Optionally change the title color
+        color: "#F3F4F6",
       },
       legend: {
         labels: {

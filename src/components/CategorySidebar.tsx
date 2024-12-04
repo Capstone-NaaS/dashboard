@@ -15,10 +15,6 @@ interface CategorySidebarProps {
 }
 
 function CategorySidebar({ hasDlq }: CategorySidebarProps) {
-  /*
-  The notification logs should be the default active category.
-  When the active category is set navigate should be called
-  */
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -49,8 +45,6 @@ function CategorySidebar({ hasDlq }: CategorySidebarProps) {
   const ACTIVE_CLASS = "border-b border-gray-500";
   const INACTIVE_CLASS = "";
 
-  // on mount set notification logs as the active category and set
-  // notification-logs as entrypoint
   useEffect(() => {
     const currentPath = location.pathname.split("/").pop() || "";
     const matchingCategory = CATEGORIES.find((cat) =>
@@ -67,7 +61,6 @@ function CategorySidebar({ hasDlq }: CategorySidebarProps) {
 
   const handleClick = (event: React.MouseEvent) => {
     const target = event.target as HTMLElement;
-    // set active category to clicked category
     const categoryValue = target.textContent?.toLowerCase().replace(" ", "-");
 
     if (categoryValue) {
@@ -91,7 +84,7 @@ function CategorySidebar({ hasDlq }: CategorySidebarProps) {
                     ? ACTIVE_CLASS
                     : INACTIVE_CLASS
                 }`}
-                active={activeCategory === category.path} // honestly not sure if this is necessary
+                active={activeCategory === category.path}
                 style={{ cursor: "pointer" }}
               >
                 <div className="flex items-center">

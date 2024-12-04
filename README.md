@@ -25,3 +25,18 @@ The dashboard is intended to be run on localhost by a trusted entity. To initial
 <!-- TO DO: add npm install instructions -->
 
 The server listens for connections on port `5173` and can be viewed from a browser at `localhost:5173/`.
+
+### Interpreting Notification Logs
+
+Notification logs are generated so developers can extract metrics from Telegraph if desired and as an observability tool.
+When a notification failure occurs, the dashboard attaches a failure badge to the log.
+The following table maps logs to their lambda's so you can understand where in the system to start debugging.
+
+| Lambda               | Logs                                                                                                                                            |
+| :------------------- | :---------------------------------------------------------------------------------------------------------------------------------------------- |
+| `sendEmail`          | <ul><li>Email sent.</li><li>Email could not be sent: SES failure.</li><li>Error sending email.</li></ul>                                        |
+| `sendSlack`          | <ul><li>Slack notification sent.</li><li>Slack notification could not be sent.</li><li>Error sending slack notification.</li></ul>              |
+| `dynamoLogger`       | <ul><li>Notification request received.</li><li>Notification not sent - channel disabled by user.</li></ul>                                      |
+| `sendInitialData`    | <ul><li>In-app notification sent.</li></ul>                                                                                                     |
+| `updateNotification` | <ul><li>In-app notification read.</li><li>In-app notification deleted.</li></ul>                                                                |
+| `websocketBroadcast` | <ul><li>In-app notification sent.</li><li>In-app notification queued for sending.</li><li>In-app notification unable to be broadcast.</li></ul> |

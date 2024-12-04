@@ -1,7 +1,11 @@
 import { Sidebar } from "flowbite-react";
-import { HiTable, HiUser } from "react-icons/hi";
-import { FaChartLine } from "react-icons/fa6";
-import { BiSolidSkull } from "react-icons/bi";
+import {
+  BsTable,
+  BsSendExclamation,
+  BsPersonFill,
+  BsGraphUp,
+} from "react-icons/bs";
+
 import { IoWarning } from "react-icons/io5";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
@@ -11,10 +15,6 @@ interface CategorySidebarProps {
 }
 
 function CategorySidebar({ hasDlq }: CategorySidebarProps) {
-  /*
-  The notification logs should be the default active category.
-  When the active category is set navigate should be called
-  */
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -23,30 +23,28 @@ function CategorySidebar({ hasDlq }: CategorySidebarProps) {
   const CATEGORIES = [
     {
       name: "Notification Logs",
-      icon: HiTable,
+      icon: BsTable,
       path: "notification-logs",
     },
     {
       name: "Users",
-      icon: HiUser,
+      icon: BsPersonFill,
       path: "users",
     },
     {
       name: "Analytics",
-      icon: FaChartLine,
+      icon: BsGraphUp,
       path: "analytics",
     },
     {
       name: "DLQ",
-      icon: BiSolidSkull,
+      icon: BsSendExclamation,
       path: "dlq",
     },
   ];
   const ACTIVE_CLASS = "border-b border-gray-500";
   const INACTIVE_CLASS = "";
 
-  // on mount set notification logs as the active category and set
-  // notification-logs as entrypoint
   useEffect(() => {
     const currentPath = location.pathname.split("/").pop() || "";
     const matchingCategory = CATEGORIES.find((cat) =>
@@ -63,7 +61,6 @@ function CategorySidebar({ hasDlq }: CategorySidebarProps) {
 
   const handleClick = (event: React.MouseEvent) => {
     const target = event.target as HTMLElement;
-    // set active category to clicked category
     const categoryValue = target.textContent?.toLowerCase().replace(" ", "-");
 
     if (categoryValue) {
@@ -87,13 +84,13 @@ function CategorySidebar({ hasDlq }: CategorySidebarProps) {
                     ? ACTIVE_CLASS
                     : INACTIVE_CLASS
                 }`}
-                active={activeCategory === category.path} // honestly not sure if this is necessary
+                active={activeCategory === category.path}
                 style={{ cursor: "pointer" }}
               >
                 <div className="flex items-center">
                   {category.name}
                   {category.path === "dlq" && hasDlq ? (
-                    <IoWarning size={24} color="red" className="ml-2" />
+                    <IoWarning size={24} color="#E57373" className="ml-2" />
                   ) : null}
                 </div>
               </Sidebar.Item>

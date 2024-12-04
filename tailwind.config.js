@@ -11,7 +11,10 @@ export default {
     extend: {
       colors: {
         customPurple: "#8315DB",
-        customPink: "#b814b8",
+        customBlue: "#759AC8",
+      },
+      fontFamily: {
+        sans: ["Open Sans", "sans-serif"],
       },
     },
   },

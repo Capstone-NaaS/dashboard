@@ -30,7 +30,6 @@ const SuccessfulChart: React.FC<ChartProps> = ({
 }) => {
   const successfulLogs = getAllSuccessfulLogs(logs);
 
-  // filter successful logs based on channels and dates
   const successEmailCount = () => {
     let successfulCounts = { ...datesObj };
     let emailLogs = successfulLogs.filter(
@@ -58,36 +57,39 @@ const SuccessfulChart: React.FC<ChartProps> = ({
   };
   const slackData = successSlackCount();
 
-  // data to pass to the Line Chart
   const data = {
     labels: chartLabels.length > 0 ? chartLabels : ["No Data"],
     datasets: [
       {
         label: "in_app",
         data: inappData,
-        borderColor: "#DB5079",
+        backgroundColor: "#E0A910",
+        borderColor: "#E0A910",
+        tension: 0.5,
       },
       {
         label: "email",
         data: emailData,
-        borderColor: "#007FFF",
+        backgroundColor: "#f8e5a4",
+        borderColor: "#f8e5a4",
+        tension: 0.5,
       },
       {
         label: "slack",
         data: slackData,
-        borderColor: "#F0E68C",
+        backgroundColor: "#FFFFF0",
+        borderColor: "#FFFFF0",
+        tension: 0.5,
       },
     ],
   };
 
-  // Chart options
   const options = {
     responsive: true,
     scales: {
       x: {
         grid: {
           color: "#263859",
-          // borderColor: "#DCDCDC",
         },
         ticks: {
           color: "#778899",
@@ -96,7 +98,6 @@ const SuccessfulChart: React.FC<ChartProps> = ({
       y: {
         grid: {
           color: "#263859",
-          // borderColor: "#778899",
         },
         ticks: {
           color: "#778899",
@@ -111,15 +112,15 @@ const SuccessfulChart: React.FC<ChartProps> = ({
         text: "Successful Outgoing Channels",
         font: {
           size: 24,
-          family: "'Helvetica Neue', 'Helvetica', 'Arial', sans-serif",
+          family: "Open Sans",
           weight: 400,
           lineHeight: 1.5,
         },
-        color: "#F3F4F6", // Optionally change the title color
+        color: "#F3F4F6",
       },
       legend: {
         labels: {
-          color: "#778899",
+          color: "#dadbdc",
         },
       },
     },

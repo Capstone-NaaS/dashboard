@@ -57,21 +57,21 @@ const FailedChart: React.FC<ChartProps> = ({
     labels: chartLabels.length > 0 ? chartLabels : ["No Data"],
     datasets: [
       {
-        label: "in_app",
+        label: "In-app",
         data: inappData,
         backgroundColor: "#E0A910",
         borderColor: "#E0A910",
         tension: 0.5,
       },
       {
-        label: "email",
+        label: "Email",
         data: emailData,
         backgroundColor: "#f8e5a4",
         borderColor: "#f8e5a4",
         tension: 0.5,
       },
       {
-        label: "slack",
+        label: "Slack",
         data: slackData,
         backgroundColor: "#FFFFF0",
         borderColor: "#FFFFF0",
@@ -142,7 +142,7 @@ const FailedChart: React.FC<ChartProps> = ({
     <div
       className="SuccessfulChart"
       style={{
-        border: "1px solid grey", // Box border color and thickness
+        border: "2px solid grey", // Box border color and thickness
         padding: "10px", // Space between the content and the border
         borderRadius: "8px", // Optional: Rounded corners
         margin: "20px", // Optional: Adds space around the border, outside of the div

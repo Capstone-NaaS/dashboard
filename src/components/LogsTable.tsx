@@ -400,7 +400,7 @@ function LogsTable() {
           </div>
         </div>
         <div className="flex flex-col">
-          <div className="flex space-x-2 tranform translate-y-[-3px]">
+          <div className="flex space-x-2 transform translate-y-[-3px]">
             <Button
               pill
               size="xs"
@@ -455,7 +455,7 @@ function LogsTable() {
                       </Table.Cell>
                       <Table.Cell>
                         <span
-                          className=" hover:underline cursor-pointer"
+                          className="font-semibold hover:underline cursor-pointer text-[#DFA810]"
                           onClick={() => navigate(`/users?id=${log.user_id}`)}
                         >
                           {log.user_id}
@@ -515,7 +515,7 @@ function LogsTable() {
                   <div className="min-w-0 flex-1">
                     <p className="truncate text-sm font-medium text-white dark:text-white">
                       <span
-                        className="hover:text-blue-600 hover:underline cursor-pointer"
+                        className="font-semibold hover:underline cursor-pointer text-[#DFA810]"
                         onClick={() =>
                           navigate(`/users?id=${selectedLog.user_id}`)
                         }

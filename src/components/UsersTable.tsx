@@ -191,7 +191,7 @@ function UsersTable() {
         <Table.Cell>
           <span
             onClick={() => navigate(`/notification-logs?userid=${user.id}`)}
-            className="font-medium hover:underline"
+            className="font-semibold hover:underline cursor-pointer text-[#DFA810]"
             style={{ cursor: "pointer" }}
           >
             Get Logs

@@ -194,7 +194,7 @@ function DlqTable({
                   <Table.Cell>{log.notification_id}</Table.Cell>
                   <Table.Cell>
                     <span
-                      className="hover:text-blue-600 hover:underline cursor-pointer"
+                      className="font-semibold hover:underline cursor-pointer text-[#DFA810]"
                       onClick={() => navigate(`/users?id=${log.user_id}`)}
                     >
                       {log.user_id}

@@ -50,14 +50,14 @@ const NotificationStatus: React.FC<ChartProps> = ({
     labels: chartLabels.length > 0 ? chartLabels : ["No Data"],
     datasets: [
       {
-        label: "successful",
+        label: "Successful",
         data: successData,
         borderColor: COLORS.on,
         backgroundColor: COLORS.on,
         tension: 0.5,
       },
       {
-        label: "failed",
+        label: "Failed",
         data: failedData,
         borderColor: COLORS.off,
         backgroundColor: COLORS.off,
@@ -125,7 +125,7 @@ const NotificationStatus: React.FC<ChartProps> = ({
     <div
       className="NotificationStatus"
       style={{
-        border: "1px solid grey", // Box border color and thickness
+        border: "2px solid grey", // Box border color and thickness
         padding: "10px", // Space between the content and the border
         borderRadius: "8px", // Optional: Rounded corners
         margin: "20px", // Optional: Adds space around the border, outside of the div

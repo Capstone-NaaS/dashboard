@@ -1,8 +1,14 @@
 {
-  "name": "client-boilerplate",
-  "private": true,
-  "version": "0.0.0",
+  "name": "@telegraph-notify/telegraph-dashboard",
+  "description": "Dashboard to observe Telegraph metrics.",
+  "version": "1.0.0",
+  "main": "bin/create-app.js",
   "type": "module",
+  "bin": {
+    "telegraph-dashboard": "./bin/create-app.js"
+  },
+  "author": "",
+  "license": "MIT",
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",

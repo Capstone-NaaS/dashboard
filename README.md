@@ -42,7 +42,7 @@ Please refer to [Telegraph CLI](https://github.com/telegraph-notify/telegraph-cl
 The dashboard is intended to be run on localhost by a trusted entity. Run the following command to start the dashboard:
 
 ```bash
-$ npm run dev
+$ npm run prod
 ```
 
 The server listens for connections on port `5173` and can be viewed from a browser at `localhost:5173/`.

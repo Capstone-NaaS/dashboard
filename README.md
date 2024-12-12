@@ -14,15 +14,36 @@ The dashboard is a centralized location for visualizing your Telegraph service i
 
 ## Installation
 
-<!-- TO DO: add more details later -->
+To install the dashboard, run the following command:
+
+```bash
+$ npx @telegraph-notify/telegraph-dashboard
+```
+
+This will create a subdirectory named `telegraph-dashboard`. Navigate to this directoy and run:
+
+```bash
+$ npm install
+```
+
+To initialize the dashboard server, a `.env` file must be created with the following information:
+
+| Key               | Value                                                                                    |
+| ----------------- | ---------------------------------------------------------------------------------------- |
+| VITE_HTTP_GATEWAY | URL of the HTTP API Gateway. This is output by Telegraph CLI after depolyment.           |
+| VITE_API_KEY      | The API key to access the HTTP Gateway. This is set during Telegraph CLI initialization. |
+
+Please refer to [Telegraph CLI](https://github.com/telegraph-notify/telegraph-cli) for more information.
 
 ## Usage
 
 ### Running the Dashboard
 
-The dashboard is intended to be run on localhost by a trusted entity. To initialize the dashboard server run the following command from the installed directory:
+The dashboard is intended to be run on localhost by a trusted entity. Run the following command to start the dashboard:
 
-<!-- TO DO: add npm install instructions -->
+```bash
+$ npm run prod
+```
 
 The server listens for connections on port `5173` and can be viewed from a browser at `localhost:5173/`.
 
@@ -30,7 +51,7 @@ The server listens for connections on port `5173` and can be viewed from a brows
 
 Notification logs are generated so developers can extract metrics from Telegraph if desired and as an observability tool.
 When a notification failure occurs, the dashboard attaches a failure badge to the log.
-The following table maps logs to their lambda's so you can understand where in the system to start debugging.
+The following table maps logs to their lambda's so users can understand where in the system to start debugging.
 
 | Lambda               | Logs                                                                                                                                            |
 | :------------------- | :---------------------------------------------------------------------------------------------------------------------------------------------- |
